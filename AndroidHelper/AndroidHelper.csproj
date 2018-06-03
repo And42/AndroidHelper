@@ -47,15 +47,9 @@
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AlphaFS, Version=2.2.0.0, Culture=neutral, PublicKeyToken=4d31a58f7d7ad5c9, processorArchitecture=MSIL">
-      <HintPath>..\packages\AlphaFS.2.2.1\lib\net40\AlphaFS.dll</HintPath>
-    </Reference>
     <Reference Include="AndroidTranslator, Version=1.4.6637.20340, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Libraries\AndroidTranslator.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>Libraries\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="SharpCompress, Version=0.21.1.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpCompress.0.21.1\lib\net35\SharpCompress.dll</HintPath>
@@ -97,15 +91,7 @@
     <None Include="Libraries\SmaliParser.dll" />
     <None Include="Libraries\SmaliParser.pdb" />
     <None Include="Libraries\SmaliParser.xml" />
-    <None Include="Libraries\UsefulFunctionsLib.dll" />
-    <None Include="Libraries\UsefulFunctionsLib.pdb" />
-    <None Include="Libraries\UsefulFunctionsLib.xml" />
     <None Include="Libraries\zzz_dependencies.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Libraries\ICSharpCode.SharpZipLib.dll" />
-    <None Include="Libraries\ICSharpCode.SharpZipLib.pdb" />
-    <None Include="Libraries\ICSharpCode.SharpZipLib.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>

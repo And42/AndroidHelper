@@ -1,7 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Text;
-using Alphaleonis.Win32.Filesystem;
 
 namespace AndroidHelper.Logic
 {
@@ -37,7 +37,7 @@ namespace AndroidHelper.Logic
         public MainSmali(string path, string methodType, Encoding encoding = null)
         {
             if (!File.Exists(path))
-                throw new System.IO.FileNotFoundException($"File \"{path}\" was not found");
+                throw new FileNotFoundException($"File \"{path}\" was not found");
 
             _fileEncoding = encoding ?? DefaultEncoding;
             PathToSmali = path;

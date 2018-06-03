@@ -1,10 +1,10 @@
-﻿using System;
+﻿/*
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using Alphaleonis.Win32.Filesystem;
 using AndroidHelper.Interfaces;
 using ICSharpCode.SharpZipLib.Zip;
-using File = Alphaleonis.Win32.Filesystem.File;
 
 namespace AndroidHelper.Logic.SharpZipFile
 {
@@ -122,3 +122,4 @@ namespace AndroidHelper.Logic.SharpZipFile
         }
     }
 }
+*/

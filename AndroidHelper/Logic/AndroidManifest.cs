@@ -2,10 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
-using Alphaleonis.Win32.Filesystem;
 using AndroidTranslator.Classes.Files;
 using SmaliParser;
 using SearchOption = System.IO.SearchOption;

@@ -6,7 +6,6 @@ using AndroidHelper.Interfaces;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Zip;
 using SharpCompress.Readers;
-using File = Alphaleonis.Win32.Filesystem.File;
 
 namespace AndroidHelper.Logic.SharpCompress
 {
