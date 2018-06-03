@@ -163,6 +163,7 @@ namespace AndroidHelper.Logic
         {
             string path = Environment.GetEnvironmentVariable("path");
 
+            // ReSharper disable once UseNullPropagation
             if (path == null)
                 return null;
 
@@ -328,7 +329,7 @@ namespace AndroidHelper.Logic
             if (pathToFramework == null)
                 throw new ArgumentNullException(nameof(pathToFramework));
             if (!File.Exists(pathToFramework))
-                throw new System.IO.FileNotFoundException("Framework не найден!", pathToFramework);
+                throw new FileNotFoundException("Framework не найден!", pathToFramework);
 
             RunJava(PathToApktool, $"if \"{pathToFramework}\"");
         }
@@ -641,7 +642,7 @@ namespace AndroidHelper.Logic
             if (fileName == null)
                 throw new ArgumentNullException(nameof(fileName));
             if (!File.Exists(fileName))
-                throw new System.IO.FileNotFoundException(nameof(fileName), fileName);
+                throw new FileNotFoundException(nameof(fileName), fileName);
 
             // DotNextZip
             //{

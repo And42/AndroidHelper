@@ -33,7 +33,7 @@ namespace AndroidHelperTests
         {
             var apktool = new Apktools(null, Paths.ApktoolResources);
 
-            Assert.AreEqual(true, apktool.Sign(Paths.SigningApk, out string signedPath));
+            Assert.AreEqual(true, apktool.Sign(Paths.SigningApk, out string _));
         }
 
         [TestMethod]
@@ -41,7 +41,7 @@ namespace AndroidHelperTests
         {
             var apktool = new Apktools(null, Paths.ApktoolResources);
 
-            Assert.AreEqual(true, apktool.Sign(Paths.SigningCorruptedApk, out string signedPath));
+            Assert.AreEqual(true, apktool.Sign(Paths.SigningCorruptedApk, out string _));
         }
 
         [TestMethod]

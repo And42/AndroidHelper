@@ -51,6 +51,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Libraries\AndroidTranslator.dll</HintPath>
     </Reference>
+    <Reference Include="SharpCompress, Version=0.21.1.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpCompress.0.21.1\lib\net35\SharpCompress.dll</HintPath>
+    </Reference>
     <Reference Include="SmaliParser, Version=1.0.6231.36827, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Libraries\SmaliParser.dll</HintPath>
@@ -79,6 +82,7 @@
     <None Include="app.config" />
     <None Include="Libraries\zzz_refresh_references.ps1" />
     <None Include="Libraries\zzz_refresh_references_pause.ps1" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Libraries\AndroidTranslator.dll" />
@@ -88,11 +92,6 @@
     <None Include="Libraries\SmaliParser.pdb" />
     <None Include="Libraries\SmaliParser.xml" />
     <None Include="Libraries\zzz_dependencies.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="SharpCompress">
-      <Version>0.21.1</Version>
-    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>

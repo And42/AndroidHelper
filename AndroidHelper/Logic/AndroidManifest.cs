@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -136,7 +137,7 @@ namespace AndroidHelper.Logic
 
             var folderOfProject = Path.GetDirectoryName(PathToManifest);
 
-            _smaliFolders = Directory.GetDirectories(folderOfProject, "smali*");
+            _smaliFolders = Directory.GetDirectories(folderOfProject ?? string.Empty, "smali*");
 
             Methods = methods ?? new[] { "onCreate", "createView" };
 
@@ -184,10 +185,12 @@ namespace AndroidHelper.Logic
             _iconName = _iconAttrib?.Value.Split('/').Last();
             _appLinkAttrib = appNode.Attributes?["android:label"]?.Value.Split('/').Last();
 
-            if (Directory.Exists(Path.Combine(folderOfProject, "res")))
+            string resFolder = Path.Combine(folderOfProject ?? string.Empty, "res");
+
+            if (Directory.Exists(resFolder))
             {
                 var query = 
-                    Directory.EnumerateFiles(Path.Combine(folderOfProject, "res"), "strings.xml",
+                    Directory.EnumerateFiles(resFolder, "strings.xml",
                         SearchOption.AllDirectories).Select(file => new XmlFile(file));
 
                 query = query.Where(itm => itm.Details?.FirstOrDefault(it => it.Name == _appLinkAttrib) != null);
@@ -380,6 +383,8 @@ namespace AndroidHelper.Logic
         /// <summary>
         /// Список разрешений системы
         /// </summary>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum AndroidPermissions
         {
             ACCESS_CHECKIN_PROPERTIES,
@@ -516,6 +521,8 @@ namespace AndroidHelper.Logic
         /// <summary>
         /// Список разрешений браузера
         /// </summary>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum BrowserPermissions
         {
             /// <summary>
@@ -531,6 +538,8 @@ namespace AndroidHelper.Logic
         /// <summary>
         /// Список разрешений будильника
         /// </summary>
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum AlarmPermissions
         {
             /// <summary>
@@ -713,6 +722,7 @@ namespace AndroidHelper.Logic
             _permissions.Remove(perm);
 
             _doc.RemoveChild(
+                // ReSharper disable once PossibleNullReferenceException
                 _doc.DocumentElement.GetElementsByTagName("uses-permission")
                     .Cast<XmlNode>()
                     .First(node => (fullName ? node.Attributes?["android:name"].InnerText : node.Attributes?["android:name"].InnerText.Split('.').Last()) == value));
