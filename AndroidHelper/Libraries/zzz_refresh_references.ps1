@@ -59,7 +59,7 @@ function CopyAndCheckFile($file, $checkVersion = $true)
 			$oldVersion = GetVersion $file
 			$newVersion = GetVersion $newFile
 		
-			if ( ( (GetFileHash $file) -eq (GetFileHash $newFile) ) -and ( -not (IsNewer $oldVersion $newVersion) ) )
+			if ( ( (GetFileHash $file) -eq (GetFileHash $newFile) ) -or ( -not (IsNewer $oldVersion $newVersion) ) )
 			{
 				Write-Host "skipped" -ForegroundColor Gray
 				Return $false
