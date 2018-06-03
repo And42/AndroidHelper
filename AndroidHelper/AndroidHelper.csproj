@@ -51,7 +51,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Libraries\AndroidTranslator.dll</HintPath>
     </Reference>
-    <Reference Include="SmaliParser, Version=1.0.6231.36827, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SmaliParser, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Libraries\SmaliParser.dll</HintPath>
     </Reference>

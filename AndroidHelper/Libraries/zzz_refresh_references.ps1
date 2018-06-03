@@ -94,10 +94,10 @@ function CopyDependency ($dependencyLib)
 	
 	if ($copied) {
 		Write-Host ("  ...\" + $pdbFileName + " ") -NoNewLine
-		CopyAndCheckFile $pdbFile $false
+		$tmp = CopyAndCheckFile $pdbFile $false
 		
 		Write-Host ("  ...\" + $docFileName + " ") -NoNewLine
-		CopyAndCheckFile $docFile $false
+		$tmp = CopyAndCheckFile $docFile $false
 	}
 }
 
@@ -114,10 +114,10 @@ function ProcessLibrary ($libraryPath, $includeDependencies)
 	
 	if ($copied) {
 		Write-Host ($pdbFile + " ") -NoNewLine
-		CopyAndCheckFile $pdbFile $false
+		$tmp = CopyAndCheckFile $pdbFile $false
 		
 		Write-Host ($docFile + " ") -NoNewLine
-		CopyAndCheckFile $docFile $false
+		$tmp = CopyAndCheckFile $docFile $false
 	}
 	
 	if ($includeDependencies -eq $FALSE)
