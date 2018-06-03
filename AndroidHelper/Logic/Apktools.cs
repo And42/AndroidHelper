@@ -114,14 +114,14 @@ namespace AndroidHelper.Logic
         /// <param name="fileName">Путь к файлу (*.apk)</param>
         /// <param name="pathToResources">Путь к папке с ресурсами</param>
         /// <param name="pathToApktool">Путь к apktool.jar</param>
-        /// <param name="jrePath">Путь к java.exe</param>
+        /// <param name="javaExePath">Путь к java.exe</param>
         /// <param name="mainSmaliEncoding">Кодировка главного smali</param>
         /// <param name="tracing">Включить ли трассировку действий</param>
         public Apktools(
             string fileName,
             string pathToResources,
             string pathToApktool = null,
-            string jrePath = null,
+            string javaExePath = null,
             Encoding mainSmaliEncoding = null,
             bool tracing = false)
         {
@@ -133,7 +133,7 @@ namespace AndroidHelper.Logic
             _startArgs = "-jar";
             PathToApktool = pathToApktool ?? Path.Combine(pathToResources, "apktool.jar");
 
-            _pathToPortableJava = jrePath ?? Path.Combine(pathToResources, "jre", "bin", "java.exe");
+            _pathToPortableJava = javaExePath ?? Path.Combine(pathToResources, "jre", "bin", "java.exe");
             _pathToInstalledJava = GetJavaPath();
 
             PathToSign = Path.Combine(pathToResources, "signapk.jar");
