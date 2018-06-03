@@ -56,8 +56,8 @@ function CopyAndCheckFile($file, $checkVersion = $true)
 			# Write-Host ("SourceHash: " + (GetFileHash $file)) -ForegroundColor Cyan
 			# Write-Host ("TargetHash: " + (GetFileHash $newFile)) -ForegroundColor Cyan
 		
-			$oldVersion = GetVersion $file
-			$newVersion = GetVersion $newFile
+			$newVersion = GetVersion $file
+			$oldVersion = GetVersion $newFile
 		
 			if ( ( (GetFileHash $file) -eq (GetFileHash $newFile) ) -or ( -not (IsNewer $oldVersion $newVersion) ) )
 			{
