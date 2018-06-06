@@ -521,6 +521,7 @@ namespace AndroidHelper.Logic
                 using (var zip = Utils.CreateZipFile(manifestApk))
                 {
                     zip.AddToArchive(manifestFile, manifestFileName);
+                    zip.Save();
                 }
             }
 
@@ -662,6 +663,7 @@ namespace AndroidHelper.Logic
                 using (var apkZip = Utils.OpenZipFile(fileName))
                 {
                     apkZip.DeleteDirectory("META-INF");
+                    apkZip.Save();
                 }
             }
 

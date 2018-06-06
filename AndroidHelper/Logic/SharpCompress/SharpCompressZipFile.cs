@@ -5,7 +5,9 @@ using System.Linq;
 using AndroidHelper.Interfaces;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Zip;
+using SharpCompress.Common;
 using SharpCompress.Readers;
+using SharpCompress.Writers;
 
 namespace AndroidHelper.Logic.SharpCompress
 {
@@ -86,13 +88,15 @@ namespace AndroidHelper.Logic.SharpCompress
             return _internalZip.Entries.Select(it => new SharpCompressZipEntry(it));
         }
 
-        public void Dispose()
+        public void Save()
         {
             using (var stream = File.Create(PathOnDisk))
-                _internalZip.SaveTo(stream);
+                _internalZip.SaveTo(stream, new WriterOptions(CompressionType.None) {LeaveStreamOpen = true});
+        }
 
+        public void Dispose()
+        {
             _internalZip.Dispose();
-
             _zipFileStream?.Dispose();
         }
     }

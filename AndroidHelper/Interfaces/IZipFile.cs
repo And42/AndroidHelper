@@ -17,6 +17,8 @@ namespace AndroidHelper.Interfaces
 
         void DeleteDirectory(string pathInArchive);
 
+        void Save();
+
         IEnumerable<IZipEntry> GetEntries();
     }
 }
