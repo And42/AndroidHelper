@@ -262,12 +262,14 @@ namespace AndroidHelper.Logic
 
         /// <summary>
         /// Подписывает текущий файл и возвращает, успешна ли прошла подпись
+        /// <param name="deleteMetaInf">Необходимо ли удалять META-INF перед подписью</param>
         /// </summary>
-        public bool Sign()
+        public bool Sign(bool deleteMetaInf = true)
         {
             Utils.DeleteFile(SignedApk);
 
-            RemoveMetaInf(NewApk);
+            if (deleteMetaInf)
+                RemoveMetaInf(NewApk);
 
             RunJava(PathToSign, string.Format("\"{0}\\testkey.x509.pem\" \"{0}\\testkey.pk8\" \"{1}\" \"{2}\"", PathToResources, NewApk, SignedApk));
             return File.Exists(SignedApk);
@@ -278,7 +280,8 @@ namespace AndroidHelper.Logic
         /// </summary>
         /// <param name="file">Файл для подписи</param>
         /// <param name="signedFile">Путь к подписанному файлу</param>
-        public bool Sign(string file, out string signedFile)
+        /// <param name="deleteMetaInf">Необходимо ли удалять META-INF перед подписью</param>
+        public bool Sign(string file, out string signedFile, bool deleteMetaInf = true)
         {
             signedFile = Path.Combine(Path.GetDirectoryName(file) ?? string.Empty, Path.GetFileNameWithoutExtension(file) + ".signed.apk");
 
@@ -286,7 +289,8 @@ namespace AndroidHelper.Logic
 
             File.Copy(file, temp, true);
 
-            RemoveMetaInf(temp);
+            if (deleteMetaInf)
+                RemoveMetaInf(temp);
 
             List<string> errors = new List<string>();
 
