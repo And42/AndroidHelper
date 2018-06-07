@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,6 +12,9 @@ using SharpCompress.Writers;
 
 namespace AndroidHelper.Logic.SharpCompress
 {
+    /// <summary>
+    /// This class will cause errors as it can not handle different compression types for items
+    /// </summary>
     internal class SharpCompressZipFile : IZipFile
     {
         public enum ZipFileMode
@@ -91,7 +95,7 @@ namespace AndroidHelper.Logic.SharpCompress
         public void Save()
         {
             using (var stream = File.Create(PathOnDisk))
-                _internalZip.SaveTo(stream, new WriterOptions(CompressionType.None) {LeaveStreamOpen = true});
+                _internalZip.SaveTo(stream, new WriterOptions(CompressionType.Deflate) {LeaveStreamOpen = true});
         }
 
         public void Dispose()
@@ -101,3 +105,4 @@ namespace AndroidHelper.Logic.SharpCompress
         }
     }
 }
+*/

@@ -1,4 +1,5 @@
-﻿using AndroidHelper.Interfaces;
+﻿/*
+using AndroidHelper.Interfaces;
 using SharpCompress.Common.Zip;
 
 namespace AndroidHelper.Logic.SharpCompress
@@ -17,3 +18,4 @@ namespace AndroidHelper.Logic.SharpCompress
         }
     }
 }
+*/

@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using AndroidHelper.Interfaces;
-using AndroidHelper.Logic.SharpCompress;
+using AndroidHelper.Logic.SharpZip;
 
 namespace AndroidHelper.Logic
 {
@@ -20,14 +20,14 @@ namespace AndroidHelper.Logic
 
         public static IZipFile OpenZipFile(string filePath)
         {
-            return new SharpCompressZipFile(filePath);
-            //return new SharpZipFile(filePath);
+            //return new SharpCompressZipFile(filePath);
+            return new SharpZipFile(filePath);
         }
 
         public static IZipFile CreateZipFile(string filePath)
         {
-            return new SharpCompressZipFile(filePath, SharpCompressZipFile.ZipFileMode.Create);
-            //return new SharpZipFile(filePath, SharpZipFile.ZipFileMode.Create);
+            //return new SharpCompressZipFile(filePath, SharpCompressZipFile.ZipFileMode.Create);
+            return new SharpZipFile(filePath, SharpZipFile.ZipFileMode.Create);
         }
     }
 }

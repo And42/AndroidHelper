@@ -1,10 +1,8 @@
-﻿/*
-using System.IO;
+﻿using System.IO;
 using AndroidHelper.Interfaces;
-
 using ZipEntry = ICSharpCode.SharpZipLib.Zip.ZipEntry;
 
-namespace AndroidHelper.Logic.SharpZipFile
+namespace AndroidHelper.Logic.SharpZip
 {
     public class SharpZipEntry : IZipEntry
     {
@@ -37,4 +35,3 @@ namespace AndroidHelper.Logic.SharpZipFile
         }
     }
 }
-*/
