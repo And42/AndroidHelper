@@ -1,81 +1,108 @@
-﻿using AndroidHelper.Logic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Xml;
+using AndroidHelper.Logic;
+using AndroidHelper.Properties;
+using Xunit;
 
 namespace AndroidHelperTests
 {
-    [TestClass]
     public class AndroidManifestTest
     {
-        private readonly AndroidManifest _manifest;
-
-        public AndroidManifestTest()
-        {
-            _manifest = new AndroidManifest(Paths.EmpireManifest);
-        }
-
-        public AndroidManifestTest(AndroidManifest manifest)
-        {
-            _manifest = manifest;
-        }
-
-        [TestMethod]
+        [Fact]
         public void AndroidManifest_PackageName()
         {
-            Assert.AreEqual("com.ezjoynetwork.empirevsorcs", _manifest.Package);
+            AndroidManifest manifest = ParseManifest();
+
+            Assert.Equal("com.ezjoynetwork.empirevsorcs", manifest.Package);
         }
 
-        [TestMethod]
+        [Fact]
         public void AndroidManifest_IconName()
         {
-            Assert.AreEqual("icon", _manifest.IconName);
+            AndroidManifest manifest = ParseManifest();
+
+            Assert.Equal("@drawable/icon", manifest.IconPath);
         }
 
-        [TestMethod]
+        [Fact]
         public void AndroidManifest_Activities()
         {
-            var activities = _manifest.Activities;
-            Assert.AreEqual(2, activities.Count);
-            Assert.AreEqual(".GameApp", activities[0].Attributes?["android:name"].Value);
-            Assert.AreEqual("com.google.ads.AdActivity", activities[1].Attributes?["android:name"].Value);
+            AndroidManifest manifest = ParseManifest();
+            IReadOnlyList<XmlNode> activities = manifest.Activities;
+
+            Assert.Equal(2, activities.Count);
+            Assert.NotNull(activities[0].Attributes);
+            Assert.Equal(".GameApp", activities[0].Attributes["android:name"].Value);
+            Assert.NotNull(activities[1].Attributes);
+            Assert.Equal("com.google.ads.AdActivity", activities[1].Attributes["android:name"].Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void AndroidManifest_PathToManifest()
         {
-            Assert.AreEqual(Paths.EmpireManifest, _manifest.PathToManifest);
+            AndroidManifest manifest = ParseManifest();
+
+            Assert.Equal(Paths.EmpireManifest, manifest.PathToManifest);
         }
 
-        [TestMethod]
+        [Fact]
         public void AndroidManifest_Permissions()
         {
-            var permissions = _manifest.Permissions;
-            Assert.AreEqual(8, permissions.Count);
-            Assert.AreEqual("android.permission.INTERNET", permissions[0].Name);
-            Assert.AreEqual("android.permission.ACCESS_NETWORK_STATE", permissions[1].Name);
-            Assert.AreEqual("android.permission.READ_PHONE_STATE", permissions[2].Name);
-            Assert.AreEqual("android.permission.ACCESS_WIFI_STATE", permissions[3].Name);
-            Assert.AreEqual("android.permission.WAKE_LOCK", permissions[4].Name);
-            Assert.AreEqual("android.permission.WRITE_EXTERNAL_STORAGE", permissions[5].Name);
-            Assert.AreEqual("android.permission.GET_ACCOUNTS", permissions[6].Name);
-            Assert.AreEqual("com.android.vending.BILLING", permissions[7].Name);
+            AndroidManifest manifest = ParseManifest();
+            UsesPermissions permissions = manifest.Permissions;
+
+            Assert.Equal(8, permissions.Count);
+            Assert.Equal("android.permission.INTERNET", permissions[0].Name);
+            Assert.Equal("android.permission.ACCESS_NETWORK_STATE", permissions[1].Name);
+            Assert.Equal("android.permission.READ_PHONE_STATE", permissions[2].Name);
+            Assert.Equal("android.permission.ACCESS_WIFI_STATE", permissions[3].Name);
+            Assert.Equal("android.permission.WAKE_LOCK", permissions[4].Name);
+            Assert.Equal("android.permission.WRITE_EXTERNAL_STORAGE", permissions[5].Name);
+            Assert.Equal("android.permission.GET_ACCOUNTS", permissions[6].Name);
+            Assert.Equal("com.android.vending.BILLING", permissions[7].Name);
         }
 
-        [TestMethod]
+        [Fact]
+        public void AndroidManifest_MethodType()
+        {
+            AndroidManifest manifest = ParseManifest();
+
+            Assert.Equal("onCreate", manifest.MethodType);
+        }
+
+        [Fact]
         public void AndroidManifest_MainSmaliPath()
         {
-            Assert.AreEqual(Paths.TestFilesFolder + @"\Empire_VS_Orcs_dcmp\smali\com\ezjoynetwork\empirevsorcs\GameApp.smali", _manifest.MainSmaliPath);
+            AndroidManifest manifest = ParseManifest();
+
+            Assert.Equal(
+                Path.Combine(Paths.TestFilesFolder, "Empire_VS_Orcs_dcmp", "smali", "com", "ezjoynetwork", "empirevsorcs", "GameApp.smali"),
+                manifest.MainSmaliPath
+            );
         }
 
-        [TestMethod]
+        [Fact]
         public void AndroidManifest_MainSmaliName()
         {
-            Assert.AreEqual(@"com\ezjoynetwork\empirevsorcs\GameApp", _manifest.MainSmaliName);
+            AndroidManifest manifest = ParseManifest();
+
+            Assert.Equal("com.ezjoynetwork.empirevsorcs.GameApp", manifest.MainSmaliName);
         }
 
-        [TestMethod]
+        [Fact]
         public void AndroidManifest_MainSmaliMethodType()
         {
-            Assert.AreEqual("onCreate", _manifest.MainSmaliFile.MethodType);
+            AndroidManifest manifest = ParseManifest();
+
+            Assert.NotNull(manifest.MainSmaliFile);
+            Assert.Equal("onCreate", manifest.MainSmaliFile.MethodType);
+        }
+
+        [NotNull]
+        private static AndroidManifest ParseManifest()
+        {
+            return new AndroidManifest(Paths.EmpireManifest);
         }
     }
 }

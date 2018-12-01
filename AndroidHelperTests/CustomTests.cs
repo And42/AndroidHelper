@@ -1,104 +1,121 @@
-﻿using System.IO;
-using System.IO.Compression;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using AndroidHelper.Logic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using AndroidHelper.Logic.Interfaces;
+using AndroidHelper.Logic.Utils;
+using AndroidHelper.Properties;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace AndroidHelperTests
 {
-    [TestClass]
     public class CustomTests
     {
-        [ClassInitialize]
-        public static void Initialize(TestContext testContext)
-        {
-            if (!Directory.Exists(Paths.StartCopy))
-                Directory.CreateDirectory(Paths.StartCopy);
+        [NotNull]
+        private static readonly ITempFileProvider TempFileProvider = Utils.CreateTempFileProvider();
+        [NotNull]
+        private static readonly ITempFolderProvider TempFolderProvider = Utils.CreateTempFolderProvider();
 
-            File.Copy(Paths.RemoveMetaInfApk, Utils.MakeTempName(Paths.RemoveMetaInfApk), true);
-            File.Copy(Paths.RemoveMetaInfErrorApk, Utils.MakeTempName(Paths.RemoveMetaInfErrorApk), true);
-            File.Copy(Paths.MultiDexApk, Utils.MakeTempName(Paths.MultiDexApk), true);
+        [NotNull]
+        private readonly ITestOutputHelper _testOutputHelper;
+
+        public CustomTests([NotNull] ITestOutputHelper testOutputHelper)
+        {
+            if (testOutputHelper == null)
+                throw new ArgumentNullException(nameof(testOutputHelper));
+
+            _testOutputHelper = testOutputHelper;
         }
 
-        [TestMethod]
-        public void ApkAsZipTest()
+        [Fact]
+        public void ApkAsZip()
         {
-            Apktools wrapper = new Apktools(Paths.OpenZipTestApk, Paths.ApktoolResources);
+            IApktool apktool = new Apktool.Builder()
+                .JavaPath(Paths.Java)
+                .ApktoolPath(Paths.Apktool)
+                .Build();
 
-            wrapper.GetSimpleManifest();
-        }
-
-        [TestMethod]
-        public void SigningTest()
-        {
-            var apktool = new Apktools(null, Paths.ApktoolResources);
-
-            Assert.AreEqual(true, apktool.Sign(Paths.SigningApk, out string _));
-        }
-
-        [TestMethod]
-        public void SigningCorruptedTest()
-        {
-            var apktool = new Apktools(null, Paths.ApktoolResources);
-
-            Assert.AreEqual(true, apktool.Sign(Paths.SigningCorruptedApk, out string _));
-        }
-
-        [TestMethod]
-        public void RemoveMetaInfErrorTest()
-        {
-            var tempFile = Utils.MakeTempName(Paths.RemoveMetaInfErrorApk);
-
-            using (var zip = ZipStorer.Open(tempFile, FileAccess.Read))
+            using (var tempManifest = TempUtils.UseTempFile(TempFileProvider))
             {
-                Assert.AreEqual(true, zip.ReadCentralDir().Any(entry => entry.FilenameInZip.StartsWith("META-INF/")));
-            }
+                apktool.ExtractSimpleManifest(Paths.OpenZipTestApk, tempManifest.TempFile, TempFolderProvider);
 
-            Apktools.RemoveMetaInf(tempFile);
+                var fileInfo = new FileInfo(tempManifest.TempFile);
 
-            using (var zip = ZipStorer.Open(tempFile, FileAccess.Read))
-            {
-                Assert.AreEqual(true, zip.ReadCentralDir().TrueForAll(entry => !entry.FilenameInZip.StartsWith("META-INF/")));
+                Assert.True(fileInfo.Exists);
+                Assert.NotEqual(0, fileInfo.Length);
             }
         }
 
-        [TestMethod]
-        public void BaksmaliMultiDexTest()
+        [Fact]
+        public void BaksmaliMultiDex()
         {
-            var tempFile = Utils.MakeTempName(Paths.MultiDexApk);
+            IApktool apktool = new Apktool.Builder()
+                .JavaPath(Paths.Java)
+                .BaksmaliPath(Paths.Baksmali)
+                .Build();
+            
+            using (var apkCopy = TempUtils.UseTempFile(TempFileProvider))
+            using (var decompiledFolder = TempUtils.UseTempFolder(TempFolderProvider))
+            {
+                File.Copy(Paths.MultiDexApk, apkCopy.TempFile, true);
 
-            var apk = new Apktools(tempFile, Paths.ApktoolResources);
+                apktool.Baksmali(
+                    apkCopy.TempFile,
+                    decompiledFolder.TempFolder,
+                    TempFolderProvider,
+                    Utils.CreateDataWriter(_testOutputHelper)
+                );
 
-            var decompiled = apk.Baksmali();
+                string[] directoriesToExist = { "smali", "smali_classes2", "smali_classes3", "smali_classes4" };
 
-            Assert.AreEqual(true, decompiled.All(Directory.Exists), "Not all directories exist");
+                var expected = new HashSet<string>(directoriesToExist);
+                var actual = new HashSet<string>(Directory.EnumerateDirectories(decompiledFolder.TempFolder).Select(Path.GetFileName));
 
-            Assert.AreEqual(true, Directory.Exists(Path.Combine(apk.FolderOfProject, "smali")), "Directory not exists 'smali'");
-            Assert.AreEqual(true, Directory.Exists(Path.Combine(apk.FolderOfProject, "smali_classes2")), "Directory not exists 'smali_classes2'");
-            Assert.AreEqual(true, Directory.Exists(Path.Combine(apk.FolderOfProject, "smali_classes3")), "Directory not exists 'smali_classes3'");
-            Assert.AreEqual(true, Directory.Exists(Path.Combine(apk.FolderOfProject, "smali_classes4")), "Directory not exists 'smali_classes4'");
+                Assert.Equal(expected, actual);
+            }
         }
 
-        [ClassCleanup]
-        public static void CleanUp()
+        [Fact]
+        public void BaksmaliAndSmaliMultiDex()
         {
-            var dir = Paths.OpenZipTestApk.Remove(Paths.OpenZipTestApk.Length - 4);
+            IApktool baksmaliApktool = new Apktool.Builder()
+                .JavaPath(Paths.Java)
+                .BaksmaliPath(Paths.Baksmali)
+                .Build();
 
-            if (Directory.Exists(dir))
-                Directory.Delete(dir, true);
+            IApktool smaliApktool = new Apktool.Builder()
+                .JavaPath(Paths.Java)
+                .SmaliPath(Paths.Smali)
+                .Build();
 
-            File.Delete(Paths.RemoveMetaInfApk + ".temp");
-            File.Delete(Paths.RemoveMetaInfErrorApk + ".temp");
+            using (var apkCopy = TempUtils.UseTempFile(TempFileProvider))
+            using (var decompiledFolder = TempUtils.UseTempFolder(TempFolderProvider))
+            using (var compiledFolder = TempUtils.UseTempFolder(TempFolderProvider))
+            {
+                File.Copy(Paths.MultiDexApk, apkCopy.TempFile, true);
 
-            File.Delete(Paths.SigningApk + ".signed");
-            File.Delete(Paths.SigningCorruptedApk + ".signed");
+                baksmaliApktool.Baksmali(
+                    apkCopy.TempFile,
+                    decompiledFolder.TempFolder,
+                    TempFolderProvider,
+                    Utils.CreateDataWriter(_testOutputHelper)
+                );
 
-            File.Delete(Utils.MakeTempName(Paths.MultiDexApk));
+                smaliApktool.Smali(
+                    decompiledFolder.TempFolder,
+                    compiledFolder.TempFolder,
+                    Utils.CreateDataWriter(_testOutputHelper)
+                );
 
-            if (Directory.Exists(Paths.StartCopy))
-                Directory.Delete(Paths.StartCopy, true);
+                string[] filesToExist = { "classes.dex", "classes2.dex", "classes3.dex", "classes4.dex" };
 
-            Directory.CreateDirectory(Paths.StartCopy);
+                var expected = new HashSet<string>(filesToExist);
+                var actual = new HashSet<string>(Directory.EnumerateFiles(compiledFolder.TempFolder).Select(Path.GetFileName));
+
+                Assert.Equal(expected, actual);
+            }
         }
     }
 }

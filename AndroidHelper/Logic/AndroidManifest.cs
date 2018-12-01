@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using AndroidHelper.Logic.Utils;
 using AndroidTranslator.Classes.Files;
+using JetBrains.Annotations;
 using SmaliParser;
 using SearchOption = System.IO.SearchOption;
-
-#pragma warning disable 1591
 
 namespace AndroidHelper.Logic
 {
@@ -23,6 +22,7 @@ namespace AndroidHelper.Logic
         /// <summary>
         /// Возвращает путь к текущему AndroidManifest.xml
         /// </summary>
+        [NotNull]
         public string PathToManifest { get; }
 
         /// <summary>
@@ -30,70 +30,75 @@ namespace AndroidHelper.Logic
         /// </summary>
         public string Package
         {
-            get => _package.InnerText;
+            get => _packageAttribute.InnerText;
             set
             {
-                _package.InnerText = value;
+                _packageAttribute.InnerText = value;
                 Save();
             }
         }
 
-        private readonly XmlAttribute _package;
-
         /// <summary>
         /// Возвращает XmlDocument представляющий текущий AndroidManifest.xml
         /// </summary>
+        [NotNull]
         public XmlDocument Document { get; }
 
         /// <summary>
         /// Возвращает текущие разрешения приложения
         /// </summary>
+        [NotNull]
         public UsesPermissions Permissions { get; }
 
         /// <summary>
         /// Возвращает список activity документа
         /// </summary>
-        public ReadOnlyCollection<XmlNode> Activities { get; }
+        [NotNull]
+        public IReadOnlyList<XmlNode> Activities { get; }
 
         /// <summary>
         /// Возвращает путь до главного smali внутри "папка проекта\smali"
         /// </summary>
+        [CanBeNull]
         public string MainSmaliName { get; }
 
         /// <summary>
         /// Возвращает путь на диске до главного smali файла
         /// </summary>
+        [CanBeNull]
         public string MainSmaliPath { get; }
 
         /// <summary>
         /// Возвращает тип главного метода
         /// </summary>
+        [CanBeNull]
         public string MethodType { get; }
 
         /// <summary>
         /// Возвращает или задаёт главный smali файл
         /// </summary>
+        [CanBeNull]
         public MainSmali MainSmaliFile { get; set; }
 
         /// <summary>
         /// Получает или задаёт список возможных названий главных методов
         /// </summary>
-        public string[] Methods { get; set; }
+        [NotNull]
+        public IReadOnlyList<string> Methods { get; }
 
         /// <summary>
-        /// Возвращает или задаёт название файла изображения (без расширения, то есть "icon")
+        /// Возвращает или задаёт название файла изображения
         /// </summary>
-        public string IconName
+        [NotNull]
+        public string IconPath
         {
-            get => _iconName;
+            get => _iconAttribute.Value;
             set
             {
-                _iconName = value;
-                _iconAttrib.Value = "@drawable/" + value;
+                _iconAttribute.Value = "@drawable/" + value;
                 Save();
             }
         }
-        private string _iconName;
 
         /// <summary>
         /// Возвращает или задаёт название приложения (без расширения, то есть "app_name")
@@ -112,13 +117,35 @@ namespace AndroidHelper.Logic
             }
         }
 
-        private readonly XmlAttribute _iconAttrib;
-        private readonly string[] _smaliFolders;
+        private const string SmaliPathSeparator = ".";
+
+        private const string ManifestTag = "manifest";
+        private const string ApplicationTag = "application";
+        private const string ActivityTag = "activity";
+        private const string IntentFilterTag = "intent-filter";
+        private const string ActionTag = "action";
+
+        private const string PackageAttribute = "package";
+        private const string NameAttribute = "android:name";
+
+        private const string ActionMain = "android.intent.action.MAIN";
+
+        private static readonly string ApplicationXPath = $"/*[local-name() = '{ManifestTag}']/*[local-name() = '{ApplicationTag}']";
+
+        [NotNull]
+        private static readonly string[] DefaultMainMethods = {"onCreate", "createView"};
+        [NotNull]
+        private static readonly Encoding DefaultSmaliEncoding = new UTF8Encoding(false);
+
+        [NotNull]
+        private readonly XmlAttribute _packageAttribute;
+        [NotNull]
+        private readonly XmlAttribute _iconAttribute;
+
         private readonly string _appLinkAttrib;
+        [CanBeNull]
         private string _appName;
         private readonly XmlFile[] _appNameFiles;
-        // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
-        private readonly Encoding _mainSmaliEncoding;
 
         /// <summary>
         /// Инициализирует новый экземпляр класса AndroidMnifest на основании пути, функции логгирования и методов
@@ -127,88 +154,90 @@ namespace AndroidHelper.Logic
         /// <param name="methods">Названия возможных главных методов</param>
         /// <param name="mainSmaliEncoding">Кодировка главного smali файла (по умолчанию UTF-8)</param>
         /// <param name="needActivitySmali">Обязательно ли класс должен наследоваться от Activity</param>
-        public AndroidManifest(string path, string[] methods = null, Encoding mainSmaliEncoding = null, bool needActivitySmali = false)
+        public AndroidManifest(
+            [NotNull] string path,
+            [CanBeNull] string[] methods = null,
+            [CanBeNull] Encoding mainSmaliEncoding = null,
+            bool needActivitySmali = false
+        )
         {
-            if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
-                throw new ArgumentException(nameof(path));
+            if (path == null)
+                throw new ArgumentNullException(nameof(path));
 
-            _mainSmaliEncoding = mainSmaliEncoding ?? new UTF8Encoding(false);
+            if (methods != null && methods.Length == 0)
+                throw new ArgumentException($"`{methods}` must be either null or not empty");
+
             PathToManifest = path;
+            Methods = Array.AsReadOnly(methods ?? DefaultMainMethods);
 
-            var folderOfProject = Path.GetDirectoryName(PathToManifest);
+            string folderOfProject = Path.GetDirectoryName(PathToManifest);
 
-            _smaliFolders = Directory.GetDirectories(folderOfProject ?? string.Empty, "smali*");
+            if (folderOfProject == null)
+                throw new ArgumentException($"`{path}` has to stay within a directory");
 
-            Methods = methods ?? new[] { "onCreate", "createView" };
-
-            MethodType = Methods[0]; 
             Document = new XmlDocument();
 
-            using (var stream = File.OpenRead(PathToManifest))
-            {
+            using (FileStream stream = File.OpenRead(PathToManifest))
                 Document.Load(stream);
-            }
 
             if (Document.DocumentElement == null)
-            {
-                return;
-            }
+                throw new Exception($"invalid format of the specified manifest file: `{PathToManifest}`");
 
-            _package = Document.DocumentElement.Attributes["package"];
+            _packageAttribute = Document.DocumentElement.Attributes[PackageAttribute];
+
+            if (_packageAttribute == null)
+                throw new Exception($"`{PackageAttribute}` not found within the manifest");
 
             Permissions = new UsesPermissions(Document, PathToManifest);
 
-            if (_smaliFolders.Length > 0)
-            {
-                string mainSmaliPath;
-                string mainSmaliName;
-                string method;
-                
-                WorkWithAndrMan2(out mainSmaliName, out mainSmaliPath, out method, needActivitySmali);
+            XmlNode applicationNode = Document.SelectSingleNode(ApplicationXPath);
 
-                MainSmaliName = mainSmaliName;
-                MainSmaliPath = mainSmaliPath;
-                MethodType = method;
+            if (applicationNode == null)
+                throw new Exception($"`{ApplicationTag}` not found within the manifest");
+            if (applicationNode.Attributes == null)
+                throw new Exception($"`{ApplicationTag}` does not have attributes");
 
-                if (File.Exists(MainSmaliPath))
-                    MainSmaliFile = new MainSmali(MainSmaliPath, MethodType, _mainSmaliEncoding);
-            }
+            Activities = Array.AsReadOnly(applicationNode.GetChildren().Where(n => n.Name == ActivityTag).ToArray());
 
-            XmlNode appNode = Document.DocumentElement.GetElementsByTagName("application")[0];
+            _iconAttribute = applicationNode.Attributes["android:icon"];
 
-            Activities = new ReadOnlyCollection<XmlNode>(
-                Document.GetElementsByTagName("application")[0].ChildNodes.Cast<XmlNode>()
-                    .Where(n => n.Name == "activity")
-                    .ToList());
+            if (_iconAttribute == null)
+                throw new Exception("application icon not found within the manifest");
 
-            _iconAttrib = appNode.Attributes?["android:icon"];
-            _iconName = _iconAttrib?.Value.Split('/').Last();
-            _appLinkAttrib = appNode.Attributes?["android:label"]?.Value.Split('/').Last();
+            _appLinkAttrib = applicationNode.Attributes["android:label"]?.Value.Split('/').Last();
 
-            string resFolder = Path.Combine(folderOfProject ?? string.Empty, "res");
+            string resFolder = Path.Combine(folderOfProject, "res");
 
             if (Directory.Exists(resFolder))
             {
-                var query = 
-                    Directory.EnumerateFiles(resFolder, "strings.xml",
-                        SearchOption.AllDirectories).Select(file => new XmlFile(file));
+                _appNameFiles =
+                    Directory.EnumerateFiles(resFolder, "strings.xml", SearchOption.AllDirectories)
+                        .Select(file => new XmlFile(file))
+                        .Where(itm => itm.Details?.FirstOrDefault(it => it.Name == _appLinkAttrib) != null)
+                        .ToArray();
 
-                query = query.Where(itm => itm.Details?.FirstOrDefault(it => it.Name == _appLinkAttrib) != null);
+                if (_appNameFiles.Length > 0)
+                    _appName = _appNameFiles[0].Details.First(item => item.Name == _appLinkAttrib).OldText;
+            }
 
-                XmlFile[] stringsFiles = query.ToArray();
+            string[] smaliFolders = Directory.GetDirectories(folderOfProject, "smali*");
+            if (smaliFolders.Length > 0)
+            {
+                XmlNode[] mainActivityNodes = Activities.Where(IsMainActivity).ToArray();
 
-                //for (int i = 0; i < stringsFiles.Count;)
-                //{
-                //    if (stringsFiles[i].Details.FirstOrDefault(item => item.Name == _appLinkAttrib) == null)
-                //        stringsFiles.RemoveAt(i);
-                //    else
-                //        i++;
-                //}
+                if (mainActivityNodes.Length > 1)
+                    throw new Exception("There can be only one main activity in manifest");
 
-                _appNameFiles = stringsFiles;
+                XmlNode mainActivityNode = mainActivityNodes.FirstOrDefault();
 
-                if (stringsFiles.Length > 0)
-                    _appName = stringsFiles[0].Details.First(item => item.Name == _appLinkAttrib).OldText;
+                (MainSmaliName, MainSmaliPath, MethodType) = GetMainSmaliInfo(
+                    applicationNode, mainActivityNode, smaliFolders, Methods, needActivitySmali
+                );
+
+                if (File.Exists(MainSmaliPath))
+                {
+                    MainSmaliFile = new MainSmali(MainSmaliPath, MethodType, mainSmaliEncoding ?? (Encoding)DefaultSmaliEncoding.Clone());
+                }
             }
 
             TraceWriter.WriteLine($"AndroidManifest: {nameof(AppName)} = \"{AppName}\"");
@@ -218,76 +247,122 @@ namespace AndroidHelper.Logic
             TraceWriter.WriteLine($"AndroidManifest: {nameof(Package)} = \"{Package}\"");
         }
 
-        private void WorkWithAndrMan2(out string mainSmaliName, out string mainSmaliPath, out string method, bool needActivity = false)
+        private static bool IsMainActivity([NotNull] XmlNode activityNode)
         {
-            mainSmaliName = null;
-            mainSmaliPath = null;
-            method = null;
+            if (activityNode == null)
+                throw new ArgumentNullException(nameof(activityNode));
 
-            List<string> smaliFiles = new List<string>();
+            if (activityNode.Name != ActivityTag)
+                return false;
+
+            XmlNode[] intentFilters = activityNode.GetChildren().Where(child => child.Name == IntentFilterTag).ToArray();
+
+            if (intentFilters.Length == 0)
+                return false;
+
+            if (intentFilters.Length > 1)
+                throw new Exception($"Activity can contain only zero or one `{IntentFilterTag}` tags");
+
+            int mainActionsCount = intentFilters[0]
+                .GetChildren()
+                .Count(child => child.Name == ActionTag && child.Attributes?[NameAttribute]?.Value == ActionMain);
+
+            if (mainActionsCount > 1)
+                throw new Exception("Intent filter can contain only zero or one main actions");
+
+            return mainActionsCount == 1;
+        }
+
+        private static (string mainSmaliName, string mainSmaliPath, string method) GetMainSmaliInfo(
+            [NotNull] XmlNode applicationNode,
+            [CanBeNull] XmlNode mainActivityNode,
+            [NotNull] IReadOnlyList<string> smaliFolders,
+            [NotNull] IReadOnlyList<string> methods,
+            bool needActivity
+        )
+        {
+            if (applicationNode == null)
+                throw new ArgumentNullException(nameof(applicationNode));
+            if (smaliFolders == null)
+                throw new ArgumentNullException(nameof(smaliFolders));
+            if (methods == null)
+                throw new ArgumentNullException(nameof(methods));
+
+            string mainSmaliName = null;
 
             if (!needActivity)
             {
-                var list = Document.SelectNodes("/*[local-name() = 'manifest']/*[local-name() = 'application']");
-
-                if (list != null && list.Count != 0)
-                    mainSmaliName = list[0].Attributes?["android:name"]?.Value;
+                // trying to get inner path from the `application` tag
+                // ReSharper disable once PossibleNullReferenceException
+                mainSmaliName = applicationNode.Attributes[NameAttribute]?.Value;
             }
 
             if (string.IsNullOrEmpty(mainSmaliName))
             {
-                var list = Document.SelectNodes("/*[local-name() = 'manifest']/*[local-name() = 'application']/*[local-name() = 'activity']/*[local-name() = 'intent-filter']/*[local-name() = 'action']");
+                // trying to get inner path from the `activity` tag
+                mainSmaliName = mainActivityNode?.Attributes?[NameAttribute]?.Value;
 
-                if (list == null)
-                    return;
-
-                var item = list.Cast<XmlNode>()
-                    .FirstOrDefault(it => it.Attributes?["android:name"]?.Value == "android.intent.action.MAIN");
-
-                mainSmaliName = item?.ParentNode?.ParentNode?.Attributes?["android:name"]?.Value;
+                if (string.IsNullOrEmpty(mainSmaliName))
+                    return (null, null, null);
             }
 
-            if (string.IsNullOrEmpty(mainSmaliName))
-                return;
+            var smaliFiles = new List<string>();
 
-            // ReSharper disable once PossibleNullReferenceException
-            mainSmaliName = mainSmaliName.Replace('.', '\\');
 
-            if (!mainSmaliName.Contains('\\'))
+            if (!mainSmaliName.Contains(SmaliPathSeparator))
             {
-                foreach (var smaliFolder in _smaliFolders)
+                // GameApp
+
+                foreach (string smaliFolder in smaliFolders)
                     smaliFiles.AddRange(Directory.EnumerateFiles(smaliFolder, mainSmaliName + ".smali", SearchOption.AllDirectories));
             }
-            else if (mainSmaliName[0] == '\\')
+            else if (mainSmaliName.StartsWith(SmaliPathSeparator, StringComparison.Ordinal))
             {
-                mainSmaliName = mainSmaliName.Remove(0, 1);
+                // .GameApp or .ezjoynetwork.empirevsorcs.GameApp
 
-                int lastIndex = mainSmaliName.LastIndexOf('\\');
+                mainSmaliName = mainSmaliName.Remove(0, SmaliPathSeparator.Length);
+                // GameApp or ezjoynetwork.empirevsorcs.GameApp
+
+                int lastIndex = mainSmaliName.LastIndexOf(SmaliPathSeparator, StringComparison.Ordinal);
+                // -1 or ezjoynetwork.empirevsorcs>.GameApp
 
                 if (lastIndex == -1)
                 {
-                    foreach (var smaliFolder in _smaliFolders)
+                    // GameApp
+
+                    foreach (var smaliFolder in smaliFolders)
                         smaliFiles.AddRange(Directory.EnumerateFiles(smaliFolder, mainSmaliName + ".smali", SearchOption.AllDirectories));
                 }
                 else
                 {
-                    string fileName = mainSmaliName.Substring(lastIndex + 1);
-                    string parent = mainSmaliName.Remove(lastIndex);
+                    // ezjoynetwork.empirevsorcs.GameApp
 
-                    foreach (var smaliFolder in _smaliFolders)
+                    string fileName = mainSmaliName.Substring(lastIndex + SmaliPathSeparator.Length);
+                    // GameApp
+                    string parentSystem = mainSmaliName.Remove(lastIndex).Replace(SmaliPathSeparator, Path.DirectorySeparatorChar.ToString());
+                    // ezjoynetwork/empirevsorcs
+
+                    foreach (var smaliFolder in smaliFolders)
                     {
                         smaliFiles.AddRange(
                             Directory.EnumerateFiles(smaliFolder, fileName + ".smali", SearchOption.AllDirectories)
-                                .Where(item => Path.GetDirectoryName(item)?.EndsWith(parent, StringComparison.Ordinal) == true));
+                                .Where(item => Path.GetDirectoryName(item)?.EndsWith(parentSystem, StringComparison.Ordinal) == true
+                            )
+                        );
                     }
                 }
             }
             else
             {
-                string name = mainSmaliName;
+                // com.ezjoynetwork.empirevsorcs.GameApp
 
-                mainSmaliPath = _smaliFolders.Select(f => $"{f}\\{name}.smali").FirstOrDefault(File.Exists);
-                smaliFiles.Add(mainSmaliPath);
+                string smaliPath = 
+                    smaliFolders
+                        .Select(f => Path.Combine(f, $"{mainSmaliName.Replace(SmaliPathSeparator, Path.DirectorySeparatorChar.ToString())}.smali"))
+                        .FirstOrDefault(File.Exists);
+
+                if (smaliPath != null)
+                    smaliFiles.Add(smaliPath);
             }
 
             foreach (string file in smaliFiles.Where(File.Exists))
@@ -296,27 +371,20 @@ namespace AndroidHelper.Logic
 
                 SmaliClass fl;
 
-                using (var stream = File.OpenText(file))
+                using (StreamReader stream = File.OpenText(file))
                     fl = SmaliClass.ParseStream(stream);
 
                 while (true)
                 {
-                    //Clipboard.SetText("|" + string.Join("|\n|", fl.Methods.Select(m => m.Name)) + "|");
-                    //MessageBox.Show("|" + string.Join("|\n|", fl.Methods.Select(m => m.Name)) + "|");
+                    string method = fl.Methods.FirstOrDefault(m => methods.Contains(m.Name))?.Name;
 
-                    method = fl.Methods.FirstOrDefault(m => Methods.Contains(m.Name))?.Name;
-
-                    if (method != null) //m => m.Name == "onCreate" || m.Name == "createView")
+                    if (method != null) // m.Name == "onCreate" || m.Name == "createView"
                     {
-                        var folder = _smaliFolders.FirstOrDefault(f => currentFile.Replace(f, "")[0] == '\\');
+                        string folder = smaliFolders.First(f => currentFile.StartsWith(f, StringComparison.Ordinal));
 
-                        mainSmaliPath = currentFile;
-                        mainSmaliName = folder != null 
-                            ? currentFile.Remove(currentFile.Length - ".smali".Length)
-                                .Remove(0, folder.Length + 1) 
-                            : null;
+                        string smaliName = currentFile.Remove(currentFile.Length - ".smali".Length).Remove(0, folder.Length + 1).Replace(Path.DirectorySeparatorChar.ToString(), SmaliPathSeparator);
 
-                        return;
+                        return (smaliName, currentFile, method);
                     }
 
                     var mth = fl.Methods.FirstOrDefault(m => m.Name == "<init>");
@@ -329,7 +397,10 @@ namespace AndroidHelper.Logic
                     // invoke-direct {p0}, Landroid/app/Application;-><init>()V
 
                     string path = item.Split(new[] {"}, L"}, StringSplitOptions.None)[1].Split(';')[0];
-                    path = _smaliFolders.Select(f => $"{f}\\{path.Replace('/', '\\')}.smali").Where(File.Exists).FirstOrDefault();
+                    path =
+                        smaliFolders
+                            .Select(f => Path.Combine(f, $"{path.Replace('/', Path.DirectorySeparatorChar)}.smali"))
+                            .FirstOrDefault(File.Exists);
 
                     if (path == null)
                         break;
@@ -339,8 +410,10 @@ namespace AndroidHelper.Logic
                 }
             }
 
-            if (!needActivity)
-                WorkWithAndrMan2(out mainSmaliName, out mainSmaliPath, out method, true);
+            if (needActivity)
+                return (null, null, null);
+
+            return GetMainSmaliInfo(applicationNode, mainActivityNode, smaliFolders, methods, true);
         }
 
         /// <summary>

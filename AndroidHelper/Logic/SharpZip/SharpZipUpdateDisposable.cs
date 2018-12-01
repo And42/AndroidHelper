@@ -6,23 +6,26 @@ namespace AndroidHelper.Logic.SharpZip
     internal class SharpZipUpdateDisposable : IDisposable
     {
         private ZipFile _zipFile;
-        private bool _isDisposed;
 
         public SharpZipUpdateDisposable(ZipFile zipFile)
         {
-            _zipFile = zipFile ?? throw new ArgumentNullException(nameof(zipFile));
+            if (zipFile == null)
+                throw new ArgumentNullException(nameof(zipFile));
+
+            _zipFile = zipFile;
+
             zipFile.BeginUpdate();
         }
 
         public void Dispose()
         {
-            if (_isDisposed)
-                throw new ObjectDisposedException(nameof(SharpZipUpdateDisposable));
+            if (_zipFile == null)
+                return;
 
-            _isDisposed = true;
-
-            _zipFile.CommitUpdate();
+            ZipFile tempRef = _zipFile;
             _zipFile = null;
+
+            tempRef.CommitUpdate();
         }
     }
 }

@@ -1,32 +1,29 @@
-﻿using System.IO;
-using System.Reflection;
+﻿using static System.IO.Path;
 
 namespace AndroidHelperTests
 {
-    static class Paths
+    internal static class Paths
     {
-#if DEBUG
-        private const string Folder = @"G:\Programming\MyLang\Libs\AndroidLibsTest\bin\Release";
-#else
-        private static readonly string Folder = 
-            Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-#endif
+        public static readonly string Start = Combine("G:" + DirectorySeparatorChar, "Programming", "MyLang", "Libs", "AndroidHelper", "AndroidHelperTests", "bin", "Release", "files");
 
-        private static readonly string Start = Folder + "\\Test files origin\\";
+        private static readonly string ApktoolResources = Combine(Start, "apktool_resources");
+        public static readonly string Original = Combine(Start, "original");
 
-        public static readonly string FilesFolder = Path.Combine(Folder, "Test files");
+        public static readonly string TempFolder = Combine(Start, "temp");
 
-        public static readonly string StartCopy = Path.GetDirectoryName(Path.GetDirectoryName(Start)) + @"\Test files copy";
-        public static readonly string EmpireManifest = Start + "Empire_VS_Orcs_dcmp\\AndroidManifest.xml";
-        public static readonly string EmpireApk = Start + "Empire_VS_Orcs.apk";
-        public static readonly string OpenZipTestApk = Start + "open zip test.apk";
-        public static readonly string RemoveMetaInfApk = Start + "remove meta inf test.apk";
-        public static readonly string RemoveMetaInfErrorApk = Start + "remove meta inf zip error test.apk";
-        public static readonly string SigningApk = Start + "signing test.apk";
-        public static readonly string SigningCorruptedApk = Start + "signing corrupted zip test.apk";
-        public static readonly string ApktoolResources = Start + "apktool_resources";
-        public static readonly string TestFilesFolder = Start.Remove(Start.Length - 1);
-        public static readonly string AdditFilesFolder = $"{Path.GetDirectoryName(TestFilesFolder)}\\Test addit files";
-        public static readonly string MultiDexApk = Start + "multi dex test.apk";
+        public static readonly string EmpireManifest = Combine(Original, "Empire_VS_Orcs_dcmp", "AndroidManifest.xml");
+        public static readonly string EmpireApk = Combine(Original, "Empire_VS_Orcs.apk");
+        public static readonly string OpenZipTestApk = Combine(Original, "open zip test.apk");
+        public static readonly string TestFilesFolder = Original;
+        public static readonly string AdditFilesFolder = Combine(GetDirectoryName(TestFilesFolder), "Test addit files");
+        public static readonly string MultiDexApk = Combine(Original, "multi dex test.apk");
+
+        public static readonly string Java = Combine(ApktoolResources, "jre", "bin", "java.exe");
+        public static readonly string Apktool = Combine(ApktoolResources, "apktool.jar");
+        public static readonly string Baksmali = Combine(ApktoolResources, "baksmali.jar");
+        public static readonly string Smali = Combine(ApktoolResources, "smali.jar");
+        public static readonly string SignApk = Combine(ApktoolResources, "signapk.jar");
+        public static readonly string KeyPemPath = Combine(ApktoolResources, "testkey.x509.pem");
+        public static readonly string KeyPkPath = Combine(ApktoolResources, "testkey.pk8");
     }
 }

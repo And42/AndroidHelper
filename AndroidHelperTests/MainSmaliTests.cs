@@ -1,17 +1,17 @@
-﻿using AndroidHelper.Logic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.IO;
+using AndroidHelper.Logic;
+using Xunit;
 
 namespace AndroidHelperTests
 {
-    [TestClass]
     public class MainSmaliTests
     {
-        [TestMethod]
+        [Fact]
         public void MainSmaliFirst()
         {
-            MainSmali cls = new MainSmali(Paths.AdditFilesFolder + "\\col.smali", "onCreate");
+            MainSmali cls = new MainSmali(Path.Combine(Paths.AdditFilesFolder, "col.smali"), "onCreate");
 
-            Assert.AreEqual(65642, cls.Index, "onCreate index");
+            Assert.Equal(65642, cls.Index); // "onCreate index"
         }
     }
 }
