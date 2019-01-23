@@ -47,14 +47,6 @@
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AndroidTranslator, Version=1.4.6637.20340, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Libraries\AndroidTranslator.dll</HintPath>
-    </Reference>
-    <Reference Include="SmaliParser, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Libraries\SmaliParser.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
@@ -91,17 +83,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Libraries\zzz_refresh_references.ps1" />
-    <None Include="Libraries\zzz_refresh_references_pause.ps1" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Libraries\AndroidTranslator.dll" />
-    <None Include="Libraries\AndroidTranslator.pdb" />
-    <None Include="Libraries\AndroidTranslator.xml" />
-    <None Include="Libraries\SmaliParser.dll" />
-    <None Include="Libraries\SmaliParser.pdb" />
-    <None Include="Libraries\SmaliParser.xml" />
-    <None Include="Libraries\zzz_dependencies.txt" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations">
@@ -110,6 +91,16 @@
     <PackageReference Include="SharpZipLib">
       <Version>1.0.0</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AndroidTranslatorLib\AndroidTranslatorLib\AndroidTranslator.csproj">
+      <Project>{355936af-19f1-4cfc-a71e-04a17ae4811b}</Project>
+      <Name>AndroidTranslator</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmaliParser\SmaliParser.csproj">
+      <Project>{b1727f95-4cde-49b8-8529-cf45acceb72b}</Project>
+      <Name>SmaliParser</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>

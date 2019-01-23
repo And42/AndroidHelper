@@ -1,3 +1,0 @@
-﻿G:\Programming\MyLang\Libs\AndroidTranslatorLib\AndroidTranslatorLib\bin\Release\AndroidTranslator.dll
-G:\Programming\MyLang\Libs\SmaliParser\bin\Release\SmaliParser.dll
-only_dll
