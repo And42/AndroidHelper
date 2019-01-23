@@ -1,0 +1,6 @@
+[submodule "SmaliParser"]
+	path = SmaliParser
+	url = git@github.com:And42/SmaliParser.git
+[submodule "AndroidTranslatorLib"]
+	path = AndroidTranslatorLib
+	url = git@github.com:And42/AndroidTranslatorLib.git
