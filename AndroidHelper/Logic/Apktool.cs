@@ -230,7 +230,7 @@ namespace AndroidHelper.Logic
 
             RunJava(
                 ApktoolPath,
-                $"b \"{projectFolderPath}\"",
+                $"b \"{projectFolderPath}\" -o \"{destinationApkPath}\"",
                 new ProcessDataHandlerDefault(
                     data =>
                     {
