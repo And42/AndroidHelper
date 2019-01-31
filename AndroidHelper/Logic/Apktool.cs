@@ -10,6 +10,7 @@ using AndroidHelper.Interfaces;
 using AndroidHelper.Logic.Interfaces;
 using AndroidHelper.Logic.Utils;
 using JetBrains.Annotations;
+using LongPaths.Logic;
 
 namespace AndroidHelper.Logic
 {
@@ -226,7 +227,7 @@ namespace AndroidHelper.Logic
             errors = new List<Error>();
             var log = new StringBuilder();
             
-            FileSystemUtils.DeleteFile(destinationApkPath);
+            LFile.Delete(destinationApkPath);
 
             RunJava(
                 ApktoolPath,

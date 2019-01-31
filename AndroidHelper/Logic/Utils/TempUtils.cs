@@ -1,6 +1,7 @@
 ﻿using System;
 using AndroidHelper.Logic.Interfaces;
 using JetBrains.Annotations;
+using LongPaths.Logic;
 
 namespace AndroidHelper.Logic.Utils
 {
@@ -53,7 +54,7 @@ namespace AndroidHelper.Logic.Utils
 
             protected override void DeleteElement()
             {
-                FileSystemUtils.DeleteDirectory(TempFolder);;
+                LDirectory.Delete(TempFolder, true);
             }
         }
         
@@ -73,7 +74,7 @@ namespace AndroidHelper.Logic.Utils
 
             protected override void DeleteElement()
             {
-                FileSystemUtils.DeleteFile(TempFile);;
+                LFile.Delete(TempFile);
             }
         }
 
