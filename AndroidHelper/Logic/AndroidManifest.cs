@@ -9,6 +9,7 @@ using System.Xml;
 using AndroidHelper.Logic.Utils;
 using AndroidTranslator.Classes.Files;
 using JetBrains.Annotations;
+using LongPaths.Logic;
 using SmaliParser;
 using SearchOption = System.IO.SearchOption;
 
@@ -177,7 +178,7 @@ namespace AndroidHelper.Logic
 
             Document = new XmlDocument();
 
-            using (FileStream stream = File.OpenRead(PathToManifest))
+            using (FileStream stream = LFile.OpenRead(PathToManifest))
                 Document.Load(stream);
 
             if (Document.DocumentElement == null)
@@ -208,10 +209,10 @@ namespace AndroidHelper.Logic
 
             string resFolder = Path.Combine(folderOfProject, "res");
 
-            if (Directory.Exists(resFolder))
+            if (LDirectory.Exists(resFolder))
             {
                 _appNameFiles =
-                    Directory.EnumerateFiles(resFolder, "strings.xml", SearchOption.AllDirectories)
+                    LDirectory.EnumerateFiles(resFolder, "strings.xml", SearchOption.AllDirectories)
                         .Select(file => new XmlFile(file))
                         .Where(itm => itm.Details?.FirstOrDefault(it => it.Name == _appLinkAttrib) != null)
                         .ToArray();
@@ -220,7 +221,7 @@ namespace AndroidHelper.Logic
                     _appName = _appNameFiles[0].Details.First(item => item.Name == _appLinkAttrib).OldText;
             }
 
-            string[] smaliFolders = Directory.GetDirectories(folderOfProject, "smali*");
+            string[] smaliFolders = LDirectory.GetDirectories(folderOfProject, "smali*");
             if (smaliFolders.Length > 0)
             {
                 XmlNode[] mainActivityNodes = Activities.Where(IsMainActivity).ToArray();
@@ -234,7 +235,7 @@ namespace AndroidHelper.Logic
                     applicationNode, mainActivityNode, smaliFolders, Methods, needActivitySmali
                 );
 
-                if (File.Exists(MainSmaliPath))
+                if (LFile.Exists(MainSmaliPath))
                 {
                     MainSmaliFile = new MainSmali(MainSmaliPath, MethodType, mainSmaliEncoding ?? (Encoding)DefaultSmaliEncoding.Clone());
                 }
@@ -359,19 +360,19 @@ namespace AndroidHelper.Logic
                 string smaliPath = 
                     smaliFolders
                         .Select(f => Path.Combine(f, $"{mainSmaliName.Replace(SmaliPathSeparator, Path.DirectorySeparatorChar.ToString())}.smali"))
-                        .FirstOrDefault(File.Exists);
+                        .FirstOrDefault(LFile.Exists);
 
                 if (smaliPath != null)
                     smaliFiles.Add(smaliPath);
             }
 
-            foreach (string file in smaliFiles.Where(File.Exists))
+            foreach (string file in smaliFiles.Where(LFile.Exists))
             {
                 string currentFile = file;
 
                 SmaliClass fl;
 
-                using (StreamReader stream = File.OpenText(file))
+                using (var stream = new StreamReader(LFile.OpenRead(file)))
                     fl = SmaliClass.ParseStream(stream);
 
                 while (true)
@@ -400,7 +401,7 @@ namespace AndroidHelper.Logic
                     path =
                         smaliFolders
                             .Select(f => Path.Combine(f, $"{path.Replace('/', Path.DirectorySeparatorChar)}.smali"))
-                            .FirstOrDefault(File.Exists);
+                            .FirstOrDefault(LFile.Exists);
 
                     if (path == null)
                         break;
@@ -421,7 +422,7 @@ namespace AndroidHelper.Logic
         /// </summary>
         public void Save()
         {
-            using (var stream = File.Create(PathToManifest))
+            using (var stream = LFile.Create(PathToManifest))
             {
                 Document.Save(stream);
             }

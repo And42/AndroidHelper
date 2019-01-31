@@ -92,6 +92,10 @@
       <Project>{f3f675a7-cb78-43ee-8e6f-3cfbce790568}</Project>
       <Name>AndroidHelper</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LongPaths\LongPaths\LongPaths.csproj">
+      <Project>{593a2d73-7513-498e-8f8a-554742c92ed7}</Project>
+      <Name>LongPaths</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

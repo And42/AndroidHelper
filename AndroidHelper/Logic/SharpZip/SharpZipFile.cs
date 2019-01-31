@@ -7,6 +7,7 @@ using System.Reflection;
 using AndroidHelper.Interfaces;
 using ICSharpCode.SharpZipLib.Zip;
 using JetBrains.Annotations;
+using LongPaths.Logic;
 
 namespace AndroidHelper.Logic.SharpZip
 {
@@ -112,7 +113,7 @@ namespace AndroidHelper.Logic.SharpZip
             
             if (mode == ZipFileMode.Open)
             {
-                if (!File.Exists(fileName))
+                if (!LFile.Exists(fileName))
                     throw new FileNotFoundException("Zip file was not found", fileName);
 
                 _internalZip = new ZipFile(fileName);
@@ -137,7 +138,7 @@ namespace AndroidHelper.Logic.SharpZip
             
             ZipEntry entry = _internalZip.GetEntry(pathInArchive);
 
-            using (FileStream output = File.Create(outputFile))
+            using (FileStream output = LFile.Create(outputFile))
             {
                 var buffer = new byte[4096];
 
@@ -249,7 +250,7 @@ namespace AndroidHelper.Logic.SharpZip
 
                 foreach (string file in files)
                 {
-                    if (!File.Exists(file))
+                    if (!LFile.Exists(file))
                         throw new FileNotFoundException("One of the files was not found", file);
 
                     _internalZip.Add(file, pathCreation(Path.GetFileName(file)));

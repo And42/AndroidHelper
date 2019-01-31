@@ -31,10 +31,10 @@ namespace AndroidHelper.Logic.SharpCompress
         {
             if (mode == ZipFileMode.Open)
             {
-                if (!File.Exists(fileName))
+                if (!LFile.Exists(fileName))
                     throw new FileNotFoundException("Zip file was not found", fileName);
 
-                _zipFileStream = new MemoryStream(File.ReadAllBytes(fileName));
+                _zipFileStream = new MemoryStream(LFile.ReadAllBytes(fileName));
                 _internalZip = ZipArchive.Open(_zipFileStream, new ReaderOptions {LeaveStreamOpen = false});
             }
             else
@@ -54,7 +54,7 @@ namespace AndroidHelper.Logic.SharpCompress
 
         public void AddToArchive(string filePath, string fullNameInArchive)
         {
-            _internalZip.AddEntry(fullNameInArchive, File.OpenRead(filePath), true);
+            _internalZip.AddEntry(fullNameInArchive, LFile.OpenRead(filePath), true);
         }
 
         public void Delete(IZipEntry entry)
@@ -94,7 +94,7 @@ namespace AndroidHelper.Logic.SharpCompress
 
         public void Save()
         {
-            using (var stream = File.Create(PathOnDisk))
+            using (var stream = LFile.Create(PathOnDisk))
                 _internalZip.SaveTo(stream, new WriterOptions(CompressionType.Deflate) {LeaveStreamOpen = true});
         }
 

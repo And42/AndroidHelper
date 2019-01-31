@@ -4,6 +4,7 @@ using System.IO.Compression;
 using AndroidHelper.Logic;
 using AndroidHelper.Logic.Interfaces;
 using AndroidHelper.Logic.Utils;
+using LongPaths.Logic;
 using Xunit;
 
 namespace AndroidHelperTests
@@ -49,7 +50,7 @@ namespace AndroidHelperTests
             using (var apkCopy = TempUtils.UseTempFile(TempFileProvider))
             using (var tempFolderWrapper = TempUtils.UseTempFolder(TempFolderProvider))
             {
-                File.Copy(fileToProcess, apkCopy.TempFile, true);
+                LFile.Copy(fileToProcess, apkCopy.TempFile, true);
 
                 apktool.Baksmali(apkCopy.TempFile, tempFolderWrapper.TempFolder, TempFolderProvider, null);
             }
@@ -57,7 +58,7 @@ namespace AndroidHelperTests
 
         private static void CheckApkSigning(string fileToProcess)
         {
-            Assert.True(File.Exists(fileToProcess));
+            Assert.True(LFile.Exists(fileToProcess));
 
             IApktool apktool = new Apktool.Builder()
                 .JavaPath(Paths.Java)
@@ -69,7 +70,7 @@ namespace AndroidHelperTests
             using (var apkCopy = TempUtils.UseTempFile(TempFileProvider))
             using (var apkSigned = TempUtils.UseTempFile(TempFileProvider))
             {
-                File.Copy(fileToProcess, apkCopy.TempFile, true);
+                LFile.Copy(fileToProcess, apkCopy.TempFile, true);
 
                 apktool.Sign(apkCopy.TempFile, apkSigned.TempFile, TempFileProvider, null, true);
 
@@ -86,7 +87,7 @@ namespace AndroidHelperTests
 
             using (var apkCopy = TempUtils.UseTempFile(TempFileProvider))
             {
-                File.Copy(fileToProcess, apkCopy.TempFile, true);
+                LFile.Copy(fileToProcess, apkCopy.TempFile, true);
 
                 apktool.RemoveMetaInf(apkCopy.TempFile);
 

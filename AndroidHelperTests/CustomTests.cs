@@ -6,6 +6,7 @@ using AndroidHelper.Logic;
 using AndroidHelper.Logic.Interfaces;
 using AndroidHelper.Logic.Utils;
 using AndroidHelper.Properties;
+using LongPaths.Logic;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -59,7 +60,7 @@ namespace AndroidHelperTests
             using (var apkCopy = TempUtils.UseTempFile(TempFileProvider))
             using (var decompiledFolder = TempUtils.UseTempFolder(TempFolderProvider))
             {
-                File.Copy(Paths.MultiDexApk, apkCopy.TempFile, true);
+                LFile.Copy(Paths.MultiDexApk, apkCopy.TempFile, true);
 
                 apktool.Baksmali(
                     apkCopy.TempFile,
@@ -94,7 +95,7 @@ namespace AndroidHelperTests
             using (var decompiledFolder = TempUtils.UseTempFolder(TempFolderProvider))
             using (var compiledFolder = TempUtils.UseTempFolder(TempFolderProvider))
             {
-                File.Copy(Paths.MultiDexApk, apkCopy.TempFile, true);
+                LFile.Copy(Paths.MultiDexApk, apkCopy.TempFile, true);
 
                 baksmaliApktool.Baksmali(
                     apkCopy.TempFile,

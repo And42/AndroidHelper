@@ -307,7 +307,7 @@ namespace AndroidHelper.Logic
 
             using (var tempApk = TempUtils.UseTempFile(tempFileProvider))
             {
-                File.Copy(sourceApkPath, tempApk.TempFile, true);
+                LFile.Copy(sourceApkPath, tempApk.TempFile, true);
 
                 if (deleteMetaInf)
                     RemoveMetaInf(tempApk.TempFile);
@@ -473,8 +473,8 @@ namespace AndroidHelper.Logic
 
 
                 Decompile(tempManifestApk, tempManifestFolder, null);
-                File.Delete(resultManifestPath);
-                File.Move(Path.Combine(tempManifestFolder, manifestFileName), resultManifestPath);
+                LFile.Delete(resultManifestPath);
+                LFile.Move(Path.Combine(tempManifestFolder, manifestFileName), resultManifestPath);
             }
         }
 
@@ -497,8 +497,8 @@ namespace AndroidHelper.Logic
                         {
                             var match = Regex.Matches(error.Message, "'([^']*)'");
                             //TraceWriter.WriteLine(match[1].Groups[1].Value + " - " + match[0].Groups[1].Value + ":");
-                            File.WriteAllText(error.File,
-                                File.ReadAllText(error.File, Encoding.UTF8)
+                            LFile.WriteAllText(error.File,
+                                LFile.ReadAllText(error.File, Encoding.UTF8)
                                     .Replace(match[1].Groups[1].Value + ":" + match[0].Groups[1].Value,
                                         match[0].Groups[1].Value), Encoding.UTF8);
                         }
@@ -512,7 +512,8 @@ namespace AndroidHelper.Logic
                             TraceWriter.WriteLine(value);
 
                             XmlDocument xDoc = new XmlDocument();
-                            xDoc.Load(error.File);
+                            using (var input = LFile.OpenRead(error.File))
+                                xDoc.Load(input);
 
                             var nodes = xDoc.SelectNodes($"//*[@name=\"{value}\"]");
 
@@ -522,7 +523,8 @@ namespace AndroidHelper.Logic
                                 foreach (XmlNode node in nodes)
                                     node.ParentNode?.RemoveChild(node);
 
-                            xDoc.Save(error.File);
+                            using (var output = LFile.Create(error.File))
+                                xDoc.Save(output);
                         }
                         break;
                     case Error.ErrorType.Error_retrieving_parent_for_item:
@@ -535,7 +537,8 @@ namespace AndroidHelper.Logic
                             TraceWriter.WriteLine(elem);
 
                             XmlDocument xDoc = new XmlDocument();
-                            xDoc.Load(error.File);
+                            using (var input = LFile.OpenRead(error.File))
+                                xDoc.Load(input);
 
                             var element = xDoc.CreateElement("style");
                             element.Attributes.Append(xDoc.CreateAttribute("name"));
@@ -543,7 +546,8 @@ namespace AndroidHelper.Logic
                             // ReSharper disable once PossibleNullReferenceException
                             xDoc.DocumentElement.AppendChild(element);
 
-                            xDoc.Save(error.File);
+                            using (var output = LFile.Create(error.File))
+                                xDoc.Save(output);
                         }
                         break;
                 }
@@ -675,7 +679,7 @@ namespace AndroidHelper.Logic
         /// <param name="keyPass">Пароль от ключа</param>
         public void SignWithKeystore(string aliasName, [CanBeNull] string pathToKeystore, string storePass, string keyPass)
         {
-            File.Copy(NewApk, SignedApk);
+            LFile.Copy(NewApk, SignedApk);
             var arguments =
                 $"\"{SignedApk}\" \"{aliasName}\" -keystore \"{pathToKeystore}\" -storepass \"{storePass}\" -keypass \"{keyPass}\"";
             RunProc(@"C:\Program Files\Java\jdk1.8.0\bin\jarsigner.exe", arguments, _combinedDataHandler);
