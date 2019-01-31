@@ -389,7 +389,7 @@ namespace AndroidHelper.Logic
                 throw new InvalidOperationException($"`{nameof(SmaliPath)}` has to be set");
 
             var smaliFolders = 
-                Directory.EnumerateDirectories(folderWithSmali)
+                LDirectory.EnumerateDirectories(folderWithSmali)
                     .Select(dir => (dir: dir, dirName: Path.GetFileName(dir) ?? string.Empty))
                     .Where(it => SmaliDexRegex.IsMatch(it.dirName));
 
@@ -426,7 +426,7 @@ namespace AndroidHelper.Logic
                 string tempManifestApk = Path.Combine(tempFolderWrapper.TempFolder, "AndroidManifest.apk");
                 string tempManifestFolder = Path.Combine(tempFolderWrapper.TempFolder, "manifest");
 
-                Directory.CreateDirectory(tempManifestFolder);
+                LDirectory.CreateDirectory(tempManifestFolder);
 
                 // DotNetZip
                 //{

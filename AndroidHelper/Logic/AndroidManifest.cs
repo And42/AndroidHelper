@@ -315,7 +315,7 @@ namespace AndroidHelper.Logic
                 // GameApp
 
                 foreach (string smaliFolder in smaliFolders)
-                    smaliFiles.AddRange(Directory.EnumerateFiles(smaliFolder, mainSmaliName + ".smali", SearchOption.AllDirectories));
+                    smaliFiles.AddRange(LDirectory.EnumerateFiles(smaliFolder, mainSmaliName + ".smali", SearchOption.AllDirectories));
             }
             else if (mainSmaliName.StartsWith(SmaliPathSeparator, StringComparison.Ordinal))
             {
@@ -332,7 +332,7 @@ namespace AndroidHelper.Logic
                     // GameApp
 
                     foreach (var smaliFolder in smaliFolders)
-                        smaliFiles.AddRange(Directory.EnumerateFiles(smaliFolder, mainSmaliName + ".smali", SearchOption.AllDirectories));
+                        smaliFiles.AddRange(LDirectory.EnumerateFiles(smaliFolder, mainSmaliName + ".smali", SearchOption.AllDirectories));
                 }
                 else
                 {
@@ -346,7 +346,7 @@ namespace AndroidHelper.Logic
                     foreach (var smaliFolder in smaliFolders)
                     {
                         smaliFiles.AddRange(
-                            Directory.EnumerateFiles(smaliFolder, fileName + ".smali", SearchOption.AllDirectories)
+                            LDirectory.EnumerateFiles(smaliFolder, fileName + ".smali", SearchOption.AllDirectories)
                                 .Where(item => Path.GetDirectoryName(item)?.EndsWith(parentSystem, StringComparison.Ordinal) == true
                             )
                         );
