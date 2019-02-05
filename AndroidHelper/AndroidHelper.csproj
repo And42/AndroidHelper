@@ -47,6 +47,15 @@
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AndroidTranslator">
+      <HintPath>..\Libraries\AndroidTranslator.dll</HintPath>
+    </Reference>
+    <Reference Include="LongPaths">
+      <HintPath>..\Libraries\LongPaths.dll</HintPath>
+    </Reference>
+    <Reference Include="SmaliParser">
+      <HintPath>..\Libraries\SmaliParser.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
@@ -90,20 +99,6 @@
     <PackageReference Include="SharpZipLib">
       <Version>1.1.0</Version>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\AndroidTranslatorLib\AndroidTranslatorLib\AndroidTranslator.csproj">
-      <Project>{355936af-19f1-4cfc-a71e-04a17ae4811b}</Project>
-      <Name>AndroidTranslator</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LongPaths\LongPaths\LongPaths.csproj">
-      <Project>{593a2d73-7513-498e-8f8a-554742c92ed7}</Project>
-      <Name>LongPaths</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SmaliParser\SmaliParser.csproj">
-      <Project>{b1727f95-4cde-49b8-8529-cf45acceb72b}</Project>
-      <Name>SmaliParser</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>

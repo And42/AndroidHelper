@@ -10,7 +10,7 @@ using AndroidHelper.Logic.Utils;
 using AndroidTranslator.Classes.Files;
 using JetBrains.Annotations;
 using LongPaths.Logic;
-using SmaliParser;
+using SmaliParser.Logic;
 using SearchOption = System.IO.SearchOption;
 
 namespace AndroidHelper.Logic
