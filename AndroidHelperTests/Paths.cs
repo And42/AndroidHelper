@@ -1,10 +1,21 @@
-﻿using static System.IO.Path;
+﻿using System.Reflection;
+using static System.IO.Path;
 
 namespace AndroidHelperTests
 {
     internal static class Paths
     {
-        public static readonly string Start = Combine("G:" + DirectorySeparatorChar, "Programming", "MyLang", "Libs", "AndroidHelper", "AndroidHelperTests", "bin", "Release", "files");
+        // url doesn't work with # signs in path:
+        // https://stackoverflow.com/a/28319367
+        public static readonly string Start =
+            GetFullPath(
+                Combine(
+                    GetDirectoryName(
+                        Assembly.GetExecutingAssembly().CodeBase.Substring("file:///".Length)
+                    ) ?? string.Empty,
+                    "..", "..", "Resources"
+                )
+            );
 
         private static readonly string ApktoolResources = Combine(Start, "apktool_resources");
         public static readonly string Original = Combine(Start, "original");

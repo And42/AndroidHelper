@@ -1,0 +1,108 @@
+Manifest-Version: 1.0
+Created-By: 1.0 (Android)
+
+Name: resources.arsc
+SHA1-Digest: lpwW2Fj5MBfXk2r8TPn2lP+3h14=
+
+Name: assets/res.013
+SHA1-Digest: QQPGQA1ppdJQDk3cVgV+Z5Icpjs=
+
+Name: assets/res.014
+SHA1-Digest: bXrZLanV9iwOFrSVdHurHVKpgt0=
+
+Name: AndroidManifest.xml
+SHA1-Digest: 3m17o+xfOiMn7n86qBTfDGwrr7g=
+
+Name: assets/res.015
+SHA1-Digest: qa9NNC6m7pIKQKngapXVtaiyKKQ=
+
+Name: assets/res.016
+SHA1-Digest: fU6N88sVSExJSw5wWD6Uz2phY7o=
+
+Name: assets/res.017
+SHA1-Digest: gy06RDJIvToMeiaMpXRotjSlGXw=
+
+Name: assets/res.018
+SHA1-Digest: D/BdtSuxfcnSnYjJeybHY6BeYeI=
+
+Name: assets/res.019
+SHA1-Digest: 6xb3+Ug4yjhPrYh1NC5bmapvfUY=
+
+Name: jsr305_annotations/v0_r47/V0_r47.gwt.xml
+SHA1-Digest: /f34xYwskAvrKqRB+jFPzJ8rPJg=
+
+Name: assets/res.010
+SHA1-Digest: s2mqXSuOqpsPMeDd0xEVorHCOfs=
+
+Name: assets/res.011
+SHA1-Digest: PcmxL+zTCR7VZ2PKHDk6fUIxvbg=
+
+Name: assets/res.012
+SHA1-Digest: 5N3D39tdpfLw6LH6VtqDaQX2JxY=
+
+Name: jsr305_annotations/Jsr305_annotations.gwt.xml
+SHA1-Digest: UBXHoAGmseBGDwjR6/MFHfcIK7g=
+
+Name: lib/armeabi-v7a/libEmpireVsOrcs.so
+SHA1-Digest: 182XZrNNszQ5FmisA4dJVYSzOgg=
+
+Name: classes.dex
+SHA1-Digest: Pf5QgnK3e8sQQssScTatK7m6liM=
+
+Name: lib/armeabi/libEmpireVsOrcs.so
+SHA1-Digest: 2kcSoPziZuYcdV47MiPH/bN5X8o=
+
+Name: res/layout/main.xml
+SHA1-Digest: Bc5qkLtBXsMyXJ2FFGuWC7MXwsI=
+
+Name: assets/res.004
+SHA1-Digest: UhBcbCxihWz/k/FvoWHygazLOMM=
+
+Name: assets/res.023
+SHA1-Digest: vg6F6HV/ScVzTJ7lyfWGxdDKLM8=
+
+Name: assets/res.005
+SHA1-Digest: n2HUR4NNfSYdvX/qXckcziHNGIw=
+
+Name: assets/res.022
+SHA1-Digest: CMCLsFmmgcFKSd9E7kCt+/LtrYc=
+
+Name: assets/res.002
+SHA1-Digest: ysGODWCjQx6qIVYivolYXH1UMUs=
+
+Name: assets/res.021
+SHA1-Digest: hYV6U3lnb10Ga6m4hm+3rDiMX20=
+
+Name: assets/res.003
+SHA1-Digest: aMAPCTzOgveCOFuPYQaK2uJ7L8I=
+
+Name: assets/res.020
+SHA1-Digest: 8vY3bLEkiqgdmHo/oJvUL94XqTQ=
+
+Name: res/drawable/icon.png
+SHA1-Digest: fsqAEccVtGa4svEgpbP3kHCXx5A=
+
+Name: assets/res.008
+SHA1-Digest: bLkevcP4xSyhPpYJLzje1dstIDA=
+
+Name: assets/res.009
+SHA1-Digest: Vewg82Bw2ALoNRLOW8M0yuJJCuk=
+
+Name: assets/res.006
+SHA1-Digest: AqQBm32NYVsv8TeMHWB5VbD0l8E=
+
+Name: assets/res.007
+SHA1-Digest: lczduyRpLNGGX3QhT6cTALazNoE=
+
+Name: assets/res.000
+SHA1-Digest: icBpscXE7wDgodnGynu2/gtfJdk=
+
+Name: assets/res.001
+SHA1-Digest: gtNI13P0zEz2XvWWfZyeXfk45hA=
+
+Name: assets/res.025
+SHA1-Digest: VFNG28dveU6dUvqnjkhVj2B1lu8=
+
+Name: assets/res.024
+SHA1-Digest: 0AisvdM50jkqfCfrGpUMaGW7n9c=
+

@@ -1,0 +1,23 @@
+!!brut.androlib.meta.MetaInfo
+apkFileName: Empire_VS_Orcs.apk
+compressionType: false
+doNotCompress: null
+isFrameworkApk: false
+packageInfo:
+  forcedPackageId: '127'
+  renameManifestPackage: null
+sdkInfo:
+  minSdkVersion: '8'
+sharedLibrary: false
+sparseResources: true
+unknownFiles:
+  jsr305_annotations/Jsr305_annotations.gwt.xml: '8'
+  jsr305_annotations/v0_r47/V0_r47.gwt.xml: '8'
+usesFramework:
+  ids:
+  - 1
+  tag: null
+version: 2.3.4
+versionInfo:
+  versionCode: '14'
+  versionName: 1.1.4
