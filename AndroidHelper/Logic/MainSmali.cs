@@ -55,7 +55,7 @@ namespace AndroidHelper.Logic
             string methodTypeLocal = MethodType;
 
             if (methodTypeLocal.Contains("onCreate"))
-                methodTypeLocal = "onCreate(";
+                methodTypeLocal = " onCreate(";
 
             //.method protected onCreate(...)V      .locals 1/.registers 1     .prologue     ...code...
 
