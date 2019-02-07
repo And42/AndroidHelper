@@ -261,11 +261,8 @@ namespace AndroidHelper.Logic
             if (intentFilters.Length == 0)
                 return false;
 
-            if (intentFilters.Length > 1)
-                throw new Exception($"Activity can contain only zero or one `{IntentFilterTag}` tags");
-
-            int mainActionsCount = intentFilters[0]
-                .GetChildren()
+            int mainActionsCount = intentFilters
+                .SelectMany(it => it.GetChildren())
                 .Count(child => child.Name == ActionTag && child.Attributes?[NameAttribute]?.Value == ActionMain);
 
             if (mainActionsCount > 1)
