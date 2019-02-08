@@ -82,12 +82,6 @@ namespace AndroidHelper.Logic
         public MainSmali MainSmaliFile { get; set; }
 
         /// <summary>
-        /// Получает или задаёт список возможных названий главных методов
-        /// </summary>
-        [NotNull]
-        public IReadOnlyList<string> Methods { get; }
-
-        /// <summary>
         /// Возвращает или задаёт название файла изображения
         /// </summary>
         [NotNull]
@@ -134,7 +128,7 @@ namespace AndroidHelper.Logic
         private static readonly string ApplicationXPath = $"/*[local-name() = '{ManifestTag}']/*[local-name() = '{ApplicationTag}']";
 
         [NotNull]
-        private static readonly string[] DefaultMainMethods = {"onCreate", "createView"};
+        private static readonly string[] Methods = {"onCreate", "createView"};
         [NotNull]
         private static readonly Encoding DefaultSmaliEncoding = new UTF8Encoding(false);
 
@@ -157,7 +151,6 @@ namespace AndroidHelper.Logic
         /// <param name="needActivitySmali">Обязательно ли класс должен наследоваться от Activity</param>
         public AndroidManifest(
             [NotNull] string path,
-            [CanBeNull] string[] methods = null,
             [CanBeNull] Encoding mainSmaliEncoding = null,
             bool needActivitySmali = false
         )
@@ -165,11 +158,7 @@ namespace AndroidHelper.Logic
             if (path == null)
                 throw new ArgumentNullException(nameof(path));
 
-            if (methods != null && methods.Length == 0)
-                throw new ArgumentException($"`{methods}` must be either null or not empty");
-
             PathToManifest = path;
-            Methods = Array.AsReadOnly(methods ?? DefaultMainMethods);
 
             string folderOfProject = Path.GetDirectoryName(PathToManifest);
 
@@ -297,6 +286,9 @@ namespace AndroidHelper.Logic
 
             if (string.IsNullOrEmpty(mainSmaliName))
             {
+                // just not to process manifest twice
+                needActivity = true;
+
                 // trying to get inner path from the `activity` tag
                 mainSmaliName = mainActivityNode?.Attributes?[NameAttribute]?.Value;
 
@@ -305,65 +297,28 @@ namespace AndroidHelper.Logic
             }
 
             var smaliFiles = new List<string>();
+            string smaliEnding = mainSmaliName.Replace('.', '/') + ";";
 
-
-            if (!mainSmaliName.Contains(SmaliPathSeparator))
+            foreach (string smaliFolder in smaliFolders)
             {
-                // GameApp
-
-                foreach (string smaliFolder in smaliFolders)
-                    smaliFiles.AddRange(LDirectory.EnumerateFiles(smaliFolder, mainSmaliName + ".smali", SearchOption.AllDirectories));
-            }
-            else if (mainSmaliName.StartsWith(SmaliPathSeparator, StringComparison.Ordinal))
-            {
-                // .GameApp or .ezjoynetwork.empirevsorcs.GameApp
-
-                mainSmaliName = mainSmaliName.Remove(0, SmaliPathSeparator.Length);
-                // GameApp or ezjoynetwork.empirevsorcs.GameApp
-
-                int lastIndex = mainSmaliName.LastIndexOf(SmaliPathSeparator, StringComparison.Ordinal);
-                // -1 or ezjoynetwork.empirevsorcs>.GameApp
-
-                if (lastIndex == -1)
+                foreach (string smaliFile in Directory.EnumerateFiles(smaliFolder, "*.smali", SearchOption.AllDirectories))
                 {
-                    // GameApp
-
-                    foreach (var smaliFolder in smaliFolders)
-                        smaliFiles.AddRange(LDirectory.EnumerateFiles(smaliFolder, mainSmaliName + ".smali", SearchOption.AllDirectories));
-                }
-                else
-                {
-                    // ezjoynetwork.empirevsorcs.GameApp
-
-                    string fileName = mainSmaliName.Substring(lastIndex + SmaliPathSeparator.Length);
-                    // GameApp
-                    string parentSystem = mainSmaliName.Remove(lastIndex).Replace(SmaliPathSeparator, Path.DirectorySeparatorChar.ToString());
-                    // ezjoynetwork/empirevsorcs
-
-                    foreach (var smaliFolder in smaliFolders)
+                    using (var reader = new StreamReader(LFile.OpenRead(smaliFile)))
                     {
-                        smaliFiles.AddRange(
-                            LDirectory.EnumerateFiles(smaliFolder, fileName + ".smali", SearchOption.AllDirectories)
-                                .Where(item => Path.GetDirectoryName(item)?.EndsWith(parentSystem, StringComparison.Ordinal) == true
-                            )
-                        );
+                        if (reader.EndOfStream)
+                            continue;
+                        
+                        string firstLine = reader.ReadLine();
+                        if (firstLine == null)
+                            continue;
+
+                        if (firstLine.EndsWith(smaliEnding, StringComparison.Ordinal))
+                            smaliFiles.Add(smaliFile);
                     }
                 }
             }
-            else
-            {
-                // com.ezjoynetwork.empirevsorcs.GameApp
 
-                string smaliPath = 
-                    smaliFolders
-                        .Select(f => Path.Combine(f, $"{mainSmaliName.Replace(SmaliPathSeparator, Path.DirectorySeparatorChar.ToString())}.smali"))
-                        .FirstOrDefault(LFile.Exists);
-
-                if (smaliPath != null)
-                    smaliFiles.Add(smaliPath);
-            }
-
-            foreach (string file in smaliFiles.Where(LFile.Exists))
+            foreach (string file in smaliFiles)
             {
                 string currentFile = file;
 

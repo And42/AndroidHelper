@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest android:versionCode="5" android:versionName="2.9.0" android:installLocation="preferExternal" package="com.mindstormstudios.tinybuilders" platformBuildVersionCode="26" platformBuildVersionName="8.0.0"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <supports-screens android:anyDensity="true" android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:xlargeScreens="true" />
+    <uses-feature android:glEsVersion="0x00020000" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+    <uses-feature android:name="android.hardware.touchscreen.multitouch" android:required="false" />
+    <uses-feature android:name="android.hardware.touchscreen.multitouch.distinct" android:required="false" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="false" />
+    <uses-permission android:name="com.android.vending.BILLING" />
+    <permission android:name="com.mindstormstudios.tinybuilders.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+    <uses-permission android:name="com.mindstormstudios.tinybuilders.permission.C2D_MESSAGE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" android:maxSdkVersion="19" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <application android:theme="@2131427382" android:label="@2131165376" android:icon="@2130837580" android:name="android.support.multidex.MultiDexApplication" android:allowBackup="true" android:largeHeap="true" android:banner="@2130837579" android:isGame="true">
+        <activity android:label="@2131165376" android:name="com.mindstormstudios.tinybuilders.UnityPlayerActivity" android:launchMode="singleTask" android:screenOrientation="sensorPortrait" android:configChanges="locale|fontScale|keyboard|keyboardHidden|layoutDirection|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+            <meta-data android:name="unityplayer.UnityActivity" android:value="true" />
+            <meta-data android:name="unityplayer.ForwardNativeEventsToDalvik" android:value="false" />
+            <meta-data android:name="unityplayer.SkipPermissionsDialog" android:value="true" />
+        </activity>
+        <activity android:name="com.tapdaq.sdk.TMTestActivity" />
+        <activity android:name="com.tapdaq.sdk.TMTestNativeActivity" />
+        <activity android:name="com.tapdaq.sdk.TMInterstitialActivity" />
+        <activity android:name="com.facebook.ads.InterstitialAdActivity" android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:name="com.tapdaq.sdk.adnetworks.chartboost.CBWebActivity" android:hardwareAccelerated="true" />
+        <activity android:name="com.tapdaq.sdk.adnetworks.adcolony.ACVideoActivity" />
+        <activity android:name="com.tapdaq.sdk.adnetworks.adcolony.ACWebActivity" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" android:name="com.jirbo.adcolony.AdColonyOverlay" android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" android:name="com.jirbo.adcolony.AdColonyFullscreen" android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" android:name="com.jirbo.adcolony.AdColonyBrowser" android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" android:name="com.chartboost.sdk.CBImpressionActivity" android:excludeFromRecents="true" android:configChanges="keyboardHidden|orientation|screenSize" android:hardwareAccelerated="true" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="com.inmobi.rendering.InMobiAdActivity" android:screenOrientation="sensor" android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode" android:hardwareAccelerated="true" />
+        <receiver android:name="com.inmobi.commons.core.utilities.uid.ImIdShareBroadCastReceiver" android:enabled="true" android:exported="true">
+            <intent-filter>
+                <action android:name="com.inmobi.share.id" />
+            </intent-filter>
+        </receiver>
+        <activity android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:name="com.vungle.publisher.VideoFullScreenAdActivity" android:configChanges="keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" android:name="com.vungle.publisher.MraidFullScreenAdActivity" android:configChanges="keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize" />
+        <meta-data android:name="applovin.sdk.key" android:value="GQ9W-_varDc36Q7hpqb_AX6dG9UqOVAewJ9uJ3T8G4CNUJ4H8fHJCNySXQGwwRZqlki2nAB2ENPkhU_q8G8Ke4" />
+        <activity android:name="com.applovin.adview.AppLovinInterstitialActivity" />
+        <activity android:name="com.applovin.adview.AppLovinConfirmationActivity" />
+        <activity android:name="com.tapdaq.sdk.adnetworks.applovin.ALVideoActivity" />
+        <activity android:name="com.tapdaq.sdk.adnetworks.applovin.ALWebActivity" />
+        <receiver android:name="com.adjust.sdk.AdjustReferrerReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+        <meta-data android:name="com.google.android.gms.version" android:value="@2131492870" />
+        <activity android:theme="@android:style/Theme.Translucent" android:name="com.google.android.gms.ads.AdActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode" />
+        <activity android:theme="@2131427635" android:name="com.google.android.gms.ads.purchase.InAppPurchaseActivity" />
+        <receiver android:name="com.area730.localnotif.NotificationReciever" />
+        <meta-data android:name="com.google.android.gms.nearby.connection.SERVICE_ID" android:value="" />
+        <meta-data android:name="com.google.android.gms.games.APP_ID" android:value="\ 807410323154" />
+        <meta-data android:name="com.google.android.gms.games.unityVersion" android:value="0.9.36" />
+        <meta-data android:name="com.google.android.gms.version" android:value="@2131492870" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" android:name="com.google.games.bridge.NativeBridgeActivity" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" android:name="com.msnative.unityshare.NativeShareActivity" android:configChanges="keyboardHidden|orientation|screenSize" />
+        <provider android:name="com.msnative.unityshare.UnityContentProvider" android:exported="false" android:authorities="com.mindstormstudios.tinybuilders.imagesharing" android:grantUriPermissions="true" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" android:name="com.facebook.unity.FBUnityLoginActivity" android:configChanges="locale|fontScale|keyboard|keyboardHidden|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" android:name="com.facebook.unity.FBUnityDialogsActivity" android:configChanges="locale|fontScale|keyboard|keyboardHidden|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode" />
+        <activity android:name="com.facebook.unity.FBUnityAppLinkActivity" android:exported="true" />
+        <activity android:name="com.facebook.unity.FBUnityDeepLinkingActivity" android:exported="true" />
+        <activity android:name="com.facebook.unity.FBUnityGameRequestActivity" />
+        <activity android:name="com.facebook.unity.FBUnityCreateGameGroupActivity" />
+        <activity android:name="com.facebook.unity.FBUnityJoinGameGroupActivity" />
+        <activity android:name="com.facebook.unity.AppInviteDialogActivity" />
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="fb559292041117553" />
+        <provider android:name="com.facebook.FacebookContentProvider" android:exported="true" android:authorities="com.facebook.app.FacebookContentProvider559292041117553" />
+        <activity android:name="com.mopub.mobileads.MoPubActivity" android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:name="com.mopub.mobileads.MraidActivity" android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:name="com.mopub.common.MoPubBrowser" android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:name="com.mopub.mobileads.MraidVideoPlayerActivity" android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:name="com.mopub.mobileads.RewardedMraidActivity" android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:name="com.vungle.publisher.FullScreenAdActivity" android:configChanges="keyboardHidden|orientation|screenSize" />
+        <service android:name="com.vungle.publisher.VungleService" android:exported="false" />
+        <activity android:name="com.adcolony.sdk.AdColonyInterstitialActivity" android:configChanges="keyboardHidden|orientation|screenSize" android:hardwareAccelerated="true" />
+        <activity android:name="com.adcolony.sdk.AdColonyAdViewActivity" android:configChanges="keyboardHidden|orientation|screenSize" android:hardwareAccelerated="true" />
+        <activity android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:name="com.unity3d.ads.android.view.UnityAdsFullscreenActivity" android:configChanges="locale|fontScale|keyboard|keyboardHidden|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode" android:hardwareAccelerated="true" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" android:name="com.tapjoy.TJAdUnitActivity" android:configChanges="keyboardHidden|orientation|screenSize" android:hardwareAccelerated="true" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="com.tapjoy.TJContentActivity" android:configChanges="keyboardHidden|orientation|screenSize" android:hardwareAccelerated="true" />
+        <activity android:name="com.tapjoy.mraid.view.ActionHandler" android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:name="com.tapjoy.mraid.view.Browser" android:configChanges="keyboardHidden|orientation|screenSize" />
+        <receiver android:name="com.tapjoy.InstallReferrerReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+        <meta-data android:name="com.tapjoy.appstore" android:value="Google" />
+        <activity android:name="com.facebook.ads.AudienceNetworkActivity" android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity" android:exported="false" android:excludeFromRecents="true" />
+        <service android:name="com.google.android.gms.auth.api.signin.RevocationBoundService" android:permission="com.google.android.gms.auth.api.signin.permission.REVOCATION_NOTIFICATION" android:exported="true" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="com.google.android.gms.common.api.GoogleApiActivity" android:exported="false" />
+        <activity android:theme="@2131427720" android:name="com.facebook.FacebookActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize" />
+        <activity android:name="com.facebook.CustomTabMainActivity" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" android:name="com.unity.purchasing.googleplay.PurchaseActivity" android:configChanges="locale|fontScale|keyboard|keyboardHidden|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode" />
+        <activity android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:name="com.hyprmx.android.HyprMarketplaceAdapterActivity" android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:label="HyprMX SDK" android:name="com.hyprmx.android.sdk.activity.HyprMXOfferViewerActivity" android:launchMode="singleTop" android:configChanges="keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize" android:hardwareAccelerated="true" />
+        <activity android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:name="com.hyprmx.android.sdk.activity.HyprMXRequiredInformationActivity" android:configChanges="keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize" />
+        <activity android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:name="com.hyprmx.android.sdk.activity.HyprMXNoOffersActivity" android:configChanges="keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize" />
+        <activity android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:name="com.hyprmx.android.sdk.videoplayer.HyprMXVideoPlayerActivity" android:configChanges="keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize" android:hardwareAccelerated="true" />
+        <activity android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:name="com.unity3d.ads.adunit.AdUnitActivity" android:configChanges="locale|fontScale|keyboard|keyboardHidden|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode" android:hardwareAccelerated="true" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" android:name="com.unity3d.ads.adunit.AdUnitTransparentActivity" android:configChanges="locale|fontScale|keyboard|keyboardHidden|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode" android:hardwareAccelerated="true" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" android:name="com.unity3d.ads.adunit.AdUnitTransparentSoftwareActivity" android:configChanges="locale|fontScale|keyboard|keyboardHidden|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode" android:hardwareAccelerated="false" />
+        <activity android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:name="com.unity3d.ads.adunit.AdUnitSoftwareActivity" android:configChanges="locale|fontScale|keyboard|keyboardHidden|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode" android:hardwareAccelerated="false" />
+        <provider android:name="com.helpshift.support.providers.HSPluginFileProvider" android:exported="false" android:authorities="com.mindstormstudios.tinybuilders.helpshift.fileprovider" android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@2131034112" />
+        </provider>
+        <activity android:theme="@2131427340" android:name="com.helpshift.support.activities.ParentActivity" android:hardwareAccelerated="true" />
+        <activity android:theme="@2131427543" android:name="com.helpshift.support.HSReview" android:configChanges="orientation|screenSize" android:hardwareAccelerated="true" />
+        <service android:label="Helpshift Service" android:name="com.helpshift.support.HSRetryService" />
+        <receiver android:name="com.helpshift.supportCampaigns.gcm.HSGcmBroadcastReceiver" android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+                <category android:name="com.mindstormstudios.tinybuilders" />
+            </intent-filter>
+        </receiver>
+        <service android:name="com.helpshift.supportCampaigns.gcm.HSGcmIntentService" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="com.helpshift.supportCampaigns.activities.UnityDelegateActivity" android:hardwareAccelerated="true" />
+        <activity android:theme="@2131427340" android:name="com.helpshift.campaigns.activities.ParentActivity" android:hardwareAccelerated="true" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="com.helpshift.campaigns.activities.NotificationActivity" android:taskAffinity="" android:excludeFromRecents="true" android:launchMode="singleTask" android:configChanges="locale|layoutDirection|orientation|screenSize" android:noHistory="true" android:hardwareAccelerated="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="tinybuildersscheme" android:host="scheme.com" />
+            </intent-filter>
+        </activity>
+        <service android:name="com.helpshift.campaigns.services.NotificationService" android:exported="false" />
+    </application>
+</manifest>

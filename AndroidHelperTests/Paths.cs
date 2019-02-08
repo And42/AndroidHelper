@@ -28,6 +28,7 @@ namespace AndroidHelperTests
         public static readonly string TestFilesFolder = Original;
         public static readonly string AdditFilesFolder = Combine(GetDirectoryName(TestFilesFolder), "Test addit files");
         public static readonly string MultiDexApk = Combine(Original, "multi dex test.apk");
+        public static readonly string MainSmali = Combine(Start, "main_smali");
 
         public static readonly string Java = Combine(ApktoolResources, "jre", "bin", "java.exe");
         public static readonly string Apktool = Combine(ApktoolResources, "apktool.jar");

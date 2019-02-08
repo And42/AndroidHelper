@@ -21,5 +21,16 @@ namespace AndroidHelperTests
 
             Assert.Equal(65642, mainSmali.Index);
         }
+
+        [Fact]
+        public void FindInDirWithDot()
+        {
+            var manifest = new AndroidManifest(Path.Combine(Paths.MainSmali, "1", "AndroidManifest.xml"));
+
+            Assert.Equal(
+                Path.Combine(Paths.MainSmali, "1", "smali", "com", "mindstormstudios.1", "tinybuilders", "UnityPlayerActivity.smali"), 
+                manifest.MainSmaliPath
+            );
+        }
     }
 }
