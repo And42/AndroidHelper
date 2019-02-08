@@ -30,8 +30,8 @@ using System.Resources;
 //   Номер сборки
 //      Редакция
 //
-[assembly: AssemblyVersion("2.0.3.0")]
+[assembly: AssemblyVersion("2.0.4.0")]
 [assembly: NeutralResourcesLanguageAttribute("ru-RU")]
 [assembly: InternalsVisibleTo("AndroidHelperTests")]
-[assembly: AssemblyFileVersion("2.0.3.0")]
+[assembly: AssemblyFileVersion("2.0.4.0")]
 
