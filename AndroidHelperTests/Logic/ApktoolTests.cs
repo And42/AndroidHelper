@@ -7,7 +7,7 @@ using AndroidHelper.Logic.Utils;
 using LongPaths.Logic;
 using Xunit;
 
-namespace AndroidHelperTests
+namespace AndroidHelperTests.Logic
 {
     public class ApktoolTests
     {

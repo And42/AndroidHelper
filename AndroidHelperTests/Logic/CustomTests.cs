@@ -10,7 +10,7 @@ using LongPaths.Logic;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace AndroidHelperTests
+namespace AndroidHelperTests.Logic
 {
     public class CustomTests
     {

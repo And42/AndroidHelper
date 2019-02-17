@@ -119,11 +119,13 @@ namespace AndroidHelper.Logic
         private const string ActivityTag = "activity";
         private const string IntentFilterTag = "intent-filter";
         private const string ActionTag = "action";
+        private const string CategoryTag = "category";
 
         private const string PackageAttribute = "package";
         private const string NameAttribute = "android:name";
 
         private const string ActionMain = "android.intent.action.MAIN";
+        private const string CategoryMain = "android.intent.category.LAUNCHER";
 
         private static readonly string ApplicationXPath = $"/*[local-name() = '{ManifestTag}']/*[local-name() = '{ApplicationTag}']";
 
@@ -251,8 +253,22 @@ namespace AndroidHelper.Logic
                 return false;
 
             int mainActionsCount = intentFilters
-                .SelectMany(it => it.GetChildren())
-                .Count(child => child.Name == ActionTag && child.Attributes?[NameAttribute]?.Value == ActionMain);
+                .Count(it =>
+                {
+                    bool hasMainAction = it.GetChildren()
+                        .Count(child =>
+                             child.Name == ActionTag &&
+                             child.Attributes?[NameAttribute]?.Value == ActionMain
+                        ) == 1;
+
+                    bool hasMainCategory = it.GetChildren()
+                        .Count(child =>
+                            child.Name == CategoryTag &&
+                            child.Attributes?[NameAttribute]?.Value == CategoryMain
+                        ) == 1;
+
+                    return hasMainAction && hasMainCategory;
+                });
 
             if (mainActionsCount > 1)
                 throw new Exception("Intent filter can contain only zero or one main actions");

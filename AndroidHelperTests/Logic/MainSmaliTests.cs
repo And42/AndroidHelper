@@ -2,7 +2,7 @@
 using AndroidHelper.Logic;
 using Xunit;
 
-namespace AndroidHelperTests
+namespace AndroidHelperTests.Logic
 {
     public class MainSmaliTests
     {
@@ -30,6 +30,24 @@ namespace AndroidHelperTests
             Assert.Equal(
                 Path.Combine(Paths.MainSmali, "1", "smali", "com", "mindstormstudios.1", "tinybuilders", "UnityPlayerActivity.smali"), 
                 manifest.MainSmaliPath
+            );
+        }
+
+        [Fact]
+        public void LeanbackIntentFilter()
+        {
+            var defaultMain = new AndroidManifest(Path.Combine(Paths.MainSmali, "2", "AndroidManifest.xml"));
+
+            Assert.Equal(
+                Path.Combine(Paths.MainSmali, "2", "smali", "com", "gameloft", "android", "ANMP", "GloftA8HM", "FrameworkApplication.smali"),
+                defaultMain.MainSmaliPath
+            );
+
+            var activityMain = new AndroidManifest(Path.Combine(Paths.MainSmali, "2", "AndroidManifest.xml"), needActivitySmali: true);
+
+            Assert.Equal(
+                Path.Combine(Paths.MainSmali, "2", "smali", "com", "gameloft", "android", "ANMP", "GloftA8HM", "MainActivity.smali"),
+                activityMain.MainSmaliPath
             );
         }
     }

@@ -7,7 +7,7 @@ using AndroidHelper.Properties;
 using LongPaths.Logic;
 using Xunit.Abstractions;
 
-namespace AndroidHelperTests
+namespace AndroidHelperTests.Logic
 {
     internal static class Utils
     {

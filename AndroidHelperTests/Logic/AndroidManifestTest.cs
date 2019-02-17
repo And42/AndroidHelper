@@ -5,7 +5,7 @@ using AndroidHelper.Logic;
 using AndroidHelper.Properties;
 using Xunit;
 
-namespace AndroidHelperTests
+namespace AndroidHelperTests.Logic
 {
     public class AndroidManifestTest
     {
