@@ -126,6 +126,7 @@ namespace AndroidHelper.Logic
 
         private const string ActionMain = "android.intent.action.MAIN";
         private const string CategoryMain = "android.intent.category.LAUNCHER";
+        private const string CategoryMainForLauncher = "android.intent.category.LAUNCHER_APP";
 
         private static readonly string ApplicationXPath = $"/*[local-name() = '{ManifestTag}']/*[local-name() = '{ApplicationTag}']";
 
@@ -215,12 +216,21 @@ namespace AndroidHelper.Logic
             string[] smaliFolders = LDirectory.GetDirectories(folderOfProject, "smali*");
             if (smaliFolders.Length > 0)
             {
-                XmlNode[] mainActivityNodes = Activities.Where(IsMainActivity).ToArray();
+                var mainActivityNodes = Activities.Select(it => (it, IsMainActivity(it))).Where(it => it.Item2.isMain).ToArray();
 
+                XmlNode mainActivityNode;
                 if (mainActivityNodes.Length > 1)
-                    throw new Exception("There can be only one main activity in manifest");
+                {
+                    XmlNode launcherActivity = mainActivityNodes.SingleOrDefault(it => it.Item2.isFromLauncher == true).it;
+                    if (launcherActivity == null)
+                        throw new Exception("There can be only one main activity in manifest");
 
-                XmlNode mainActivityNode = mainActivityNodes.FirstOrDefault();
+                    mainActivityNode = launcherActivity;
+                }
+                else
+                {
+                    mainActivityNode = mainActivityNodes.FirstOrDefault().it;
+                }
 
                 (MainSmaliName, MainSmaliPath, MethodType) = GetMainSmaliInfo(
                     applicationNode, mainActivityNode, smaliFolders, Methods, needActivitySmali
@@ -239,21 +249,21 @@ namespace AndroidHelper.Logic
             TraceWriter.WriteLine($"AndroidManifest: {nameof(Package)} = \"{Package}\"");
         }
 
-        private static bool IsMainActivity([NotNull] XmlNode activityNode)
+        private static (bool isMain, bool? isFromLauncher) IsMainActivity([NotNull] XmlNode activityNode)
         {
             if (activityNode == null)
                 throw new ArgumentNullException(nameof(activityNode));
 
             if (activityNode.Name != ActivityTag)
-                return false;
+                return (false, null);
 
             XmlNode[] intentFilters = activityNode.GetChildren().Where(child => child.Name == IntentFilterTag).ToArray();
 
             if (intentFilters.Length == 0)
-                return false;
+                return (false, null);
 
-            int mainActionsCount = intentFilters
-                .Count(it =>
+            var mainActions = intentFilters
+                .Select(it =>
                 {
                     bool hasMainAction = it.GetChildren()
                         .Count(child =>
@@ -267,13 +277,28 @@ namespace AndroidHelper.Logic
                             child.Attributes?[NameAttribute]?.Value == CategoryMain
                         ) == 1;
 
-                    return hasMainAction && hasMainCategory;
-                });
+                    bool hasLauncherMainCategory = it.GetChildren()
+                       .Count(child =>
+                           child.Name == CategoryTag &&
+                           child.Attributes?[NameAttribute]?.Value == CategoryMainForLauncher
+                       ) == 1;
 
-            if (mainActionsCount > 1)
+                    return (result: hasMainAction && hasMainCategory != hasLauncherMainCategory, hasLauncherMainCategory);
+                })
+                .Where(it => it.result)
+                .ToList();
+
+            if (mainActions.Count > 1)
                 throw new Exception("Intent filter can contain only zero or one main actions");
+            if (mainActions.Count != 1)
+                return (false, null);
 
-            return mainActionsCount == 1;
+            var mainAction = mainActions[0];
+            if (!mainAction.result)
+                return (false, null);
+
+            return (true, mainAction.hasLauncherMainCategory);
+
         }
 
         private static (string mainSmaliName, string mainSmaliPath, string method) GetMainSmaliInfo(

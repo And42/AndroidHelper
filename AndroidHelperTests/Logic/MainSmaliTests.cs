@@ -50,5 +50,23 @@ namespace AndroidHelperTests.Logic
                 activityMain.MainSmaliPath
             );
         }
+
+        [Fact]
+        public void LauncherAppCategory()
+        {
+            var defaultMain = new AndroidManifest(Path.Combine(Paths.MainSmali, "3", "AndroidManifest.xml"));
+
+            Assert.Equal(
+                Path.Combine(Paths.MainSmali, "3", "smali", "com", "android", "launcher3", "LauncherApplication.smali"),
+                defaultMain.MainSmaliPath
+            );
+
+            var activityMain = new AndroidManifest(Path.Combine(Paths.MainSmali, "3", "AndroidManifest.xml"), needActivitySmali: true);
+
+            Assert.Equal(
+                Path.Combine(Paths.MainSmali, "3", "smali", "com", "teslacoilsw", "launcher", "NovaLauncher.smali"),
+                activityMain.MainSmaliPath
+            );
+        }
     }
 }
