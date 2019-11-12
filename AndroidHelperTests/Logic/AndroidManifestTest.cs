@@ -2,7 +2,7 @@
 using System.IO;
 using System.Xml;
 using AndroidHelper.Logic;
-using AndroidHelper.Properties;
+using JetBrains.Annotations;
 using Xunit;
 
 namespace AndroidHelperTests.Logic

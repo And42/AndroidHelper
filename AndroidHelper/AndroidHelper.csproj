@@ -89,7 +89,6 @@
     <Compile Include="Logic\MainSmali.cs" />
     <Compile Include="Logic\ZipFileMode.cs" />
     <Compile Include="Logic\Zip\EntryNotFoundException.cs" />
-    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Logic\TraceWriter.cs" />
   </ItemGroup>

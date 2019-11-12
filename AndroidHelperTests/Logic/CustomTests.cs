@@ -5,7 +5,7 @@ using System.Linq;
 using AndroidHelper.Logic;
 using AndroidHelper.Logic.Interfaces;
 using AndroidHelper.Logic.Utils;
-using AndroidHelper.Properties;
+using JetBrains.Annotations;
 using LongPaths.Logic;
 using Xunit;
 using Xunit.Abstractions;

@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using AndroidHelper.Logic;
 using AndroidHelper.Logic.Interfaces;
-using AndroidHelper.Properties;
+using JetBrains.Annotations;
 using LongPaths.Logic;
 using Xunit.Abstractions;
 
