@@ -9,7 +9,6 @@ using System.Xml;
 using AndroidHelper.Logic.Utils;
 using JetBrains.Annotations;
 using SmaliParser.Logic;
-using SearchOption = System.IO.SearchOption;
 
 namespace AndroidHelper.Logic
 {
