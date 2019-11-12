@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using AndroidHelper.Logic.Utils;
-using AndroidTranslator.Classes.Files;
 using JetBrains.Annotations;
 using SmaliParser.Logic;
 using SearchOption = System.IO.SearchOption;
@@ -94,23 +93,6 @@ namespace AndroidHelper.Logic
             }
         }
 
-        /// <summary>
-        /// Возвращает или задаёт название приложения (без расширения, то есть "app_name")
-        /// </summary>
-        public string AppName
-        {
-            get => _appName;
-            set
-            {
-                _appName = value;
-                foreach (var file in _appNameFiles)
-                {
-                    file.Details.First(item => item.Name == _appLinkAttrib).NewText = value;
-                    file.SaveChanges();
-                }
-            }
-        }
-
         private const string SmaliPathSeparator = ".";
 
         private const string ManifestTag = "manifest";
@@ -140,9 +122,6 @@ namespace AndroidHelper.Logic
         private readonly XmlAttribute _iconAttribute;
 
         private readonly string _appLinkAttrib;
-        [CanBeNull]
-        private string _appName;
-        private readonly XmlFile[] _appNameFiles;
 
         /// <summary>
         /// Инициализирует новый экземпляр класса AndroidMnifest на основании пути, функции логгирования и методов
@@ -198,20 +177,6 @@ namespace AndroidHelper.Logic
 
             _appLinkAttrib = applicationNode.Attributes["android:label"]?.Value.Split('/').Last();
 
-            string resFolder = Path.Combine(folderOfProject, "res");
-
-            if (Directory.Exists(resFolder))
-            {
-                _appNameFiles =
-                    Directory.EnumerateFiles(resFolder, "strings.xml", SearchOption.AllDirectories)
-                        .Select(file => new XmlFile(file))
-                        .Where(itm => itm.Details?.FirstOrDefault(it => it.Name == _appLinkAttrib) != null)
-                        .ToArray();
-
-                if (_appNameFiles.Length > 0)
-                    _appName = _appNameFiles[0].Details.First(item => item.Name == _appLinkAttrib).OldText;
-            }
-
             string[] smaliFolders = Directory.GetDirectories(folderOfProject, "smali*");
             if (smaliFolders.Length > 0)
             {
@@ -241,7 +206,6 @@ namespace AndroidHelper.Logic
                 }
             }
 
-            TraceWriter.WriteLine($"AndroidManifest: {nameof(AppName)} = \"{AppName}\"");
             TraceWriter.WriteLine($"AndroidManifest: {nameof(MainSmaliName)} = \"{MainSmaliName}\"");
             TraceWriter.WriteLine($"AndroidManifest: {nameof(MainSmaliPath)} = \"{MainSmaliPath}\"");
             TraceWriter.WriteLine($"AndroidManifest: {nameof(MethodType)} = \"{MethodType}\"");

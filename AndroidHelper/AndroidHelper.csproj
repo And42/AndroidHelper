@@ -48,9 +48,6 @@
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AndroidTranslator">
-      <HintPath>..\Libraries\AndroidTranslator.dll</HintPath>
-    </Reference>
     <Reference Include="SmaliParser">
       <HintPath>..\Libraries\SmaliParser.dll</HintPath>
     </Reference>
