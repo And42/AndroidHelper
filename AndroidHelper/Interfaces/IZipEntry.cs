@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using AndroidHelper.Logic;
+using JetBrains.Annotations;
 
 namespace AndroidHelper.Interfaces
 {
@@ -10,6 +11,8 @@ namespace AndroidHelper.Interfaces
         [NotNull]
         string PathInArchive { get; }
         
+        CompressionType CompressionType { get; }
+
         bool IsFile { get; }
     }
 }

@@ -1,20 +1,18 @@
 ﻿using AndroidHelper.Interfaces;
-using AndroidHelper.Logic.SharpZip;
+using JetBrains.Annotations;
 
 namespace AndroidHelper.Logic.Utils
 {
     internal static class ZipUtils
     {
-        public static IZipFile OpenZipFile(string filePath)
+        public static IZipFile OpenZipFile([NotNull] string filePath)
         {
-            //return new SharpCompressZipFile(filePath);
-            return new SharpZipFile(filePath);
+            return new SystemIOZipFile.SystemIOZipFile(filePath);
         }
 
-        public static IZipFile CreateZipFile(string filePath)
+        public static IZipFile CreateZipFile([NotNull] string filePath)
         {
-            //return new SharpCompressZipFile(filePath, SharpCompressZipFile.ZipFileMode.Create);
-            return new SharpZipFile(filePath, ZipFileMode.Create);
+            return new SystemIOZipFile.SystemIOZipFile(filePath, ZipFileMode.Create);
         }
     }
 }
