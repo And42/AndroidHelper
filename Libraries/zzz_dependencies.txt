@@ -1,4 +1,2 @@
-﻿C:\Files\Programming\C#\library_repos\LongPaths\LongPaths\bin\Release\LongPaths.dll
-C:\Files\Programming\C#\library_repos\SmaliParser\bin\Release\SmaliParser.dll
-C:\Files\Programming\C#\library_repos\AndroidTranslatorLib\AndroidTranslatorLib\bin\Release\AndroidTranslator.dll
+﻿C:\Files\Programming\C#\library_repos\SmaliParser\bin\Release\SmaliParser.dll
 only_dll
