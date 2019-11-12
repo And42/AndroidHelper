@@ -10,7 +10,6 @@ using AndroidHelper.Interfaces;
 using AndroidHelper.Logic.Interfaces;
 using AndroidHelper.Logic.Utils;
 using JetBrains.Annotations;
-using LongPaths.Logic;
 
 namespace AndroidHelper.Logic
 {
@@ -227,7 +226,7 @@ namespace AndroidHelper.Logic
             errors = new List<Error>();
             var log = new StringBuilder();
             
-            LFile.Delete(destinationApkPath);
+            File.Delete(destinationApkPath);
 
             RunJava(
                 ApktoolPath,
@@ -307,7 +306,7 @@ namespace AndroidHelper.Logic
 
             using (var tempApk = TempUtils.UseTempFile(tempFileProvider))
             {
-                LFile.Copy(sourceApkPath, tempApk.TempFile, true);
+                File.Copy(sourceApkPath, tempApk.TempFile, true);
 
                 if (deleteMetaInf)
                     RemoveMetaInf(tempApk.TempFile);
@@ -389,7 +388,7 @@ namespace AndroidHelper.Logic
                 throw new InvalidOperationException($"`{nameof(SmaliPath)}` has to be set");
 
             var smaliFolders = 
-                LDirectory.EnumerateDirectories(folderWithSmali)
+                Directory.EnumerateDirectories(folderWithSmali)
                     .Select(dir => (dir: dir, dirName: Path.GetFileName(dir) ?? string.Empty))
                     .Where(it => SmaliDexRegex.IsMatch(it.dirName));
 
@@ -426,7 +425,7 @@ namespace AndroidHelper.Logic
                 string tempManifestApk = Path.Combine(tempFolderWrapper.TempFolder, "AndroidManifest.apk");
                 string tempManifestFolder = Path.Combine(tempFolderWrapper.TempFolder, "manifest");
 
-                LDirectory.CreateDirectory(tempManifestFolder);
+                Directory.CreateDirectory(tempManifestFolder);
 
                 // DotNetZip
                 //{
@@ -473,8 +472,8 @@ namespace AndroidHelper.Logic
 
 
                 Decompile(tempManifestApk, tempManifestFolder, null);
-                LFile.Delete(resultManifestPath);
-                LFile.Move(Path.Combine(tempManifestFolder, manifestFileName), resultManifestPath);
+                File.Delete(resultManifestPath);
+                File.Move(Path.Combine(tempManifestFolder, manifestFileName), resultManifestPath);
             }
         }
 
@@ -497,8 +496,8 @@ namespace AndroidHelper.Logic
                         {
                             var match = Regex.Matches(error.Message, "'([^']*)'");
                             //TraceWriter.WriteLine(match[1].Groups[1].Value + " - " + match[0].Groups[1].Value + ":");
-                            LFile.WriteAllText(error.File,
-                                LFile.ReadAllText(error.File, Encoding.UTF8)
+                            File.WriteAllText(error.File,
+                                File.ReadAllText(error.File, Encoding.UTF8)
                                     .Replace(match[1].Groups[1].Value + ":" + match[0].Groups[1].Value,
                                         match[0].Groups[1].Value), Encoding.UTF8);
                         }
@@ -512,7 +511,7 @@ namespace AndroidHelper.Logic
                             TraceWriter.WriteLine(value);
 
                             XmlDocument xDoc = new XmlDocument();
-                            using (var input = LFile.OpenRead(error.File))
+                            using (var input = File.OpenRead(error.File))
                                 xDoc.Load(input);
 
                             var nodes = xDoc.SelectNodes($"//*[@name=\"{value}\"]");
@@ -523,7 +522,7 @@ namespace AndroidHelper.Logic
                                 foreach (XmlNode node in nodes)
                                     node.ParentNode?.RemoveChild(node);
 
-                            using (var output = LFile.Create(error.File))
+                            using (var output = File.Create(error.File))
                                 xDoc.Save(output);
                         }
                         break;
@@ -537,7 +536,7 @@ namespace AndroidHelper.Logic
                             TraceWriter.WriteLine(elem);
 
                             XmlDocument xDoc = new XmlDocument();
-                            using (var input = LFile.OpenRead(error.File))
+                            using (var input = File.OpenRead(error.File))
                                 xDoc.Load(input);
 
                             var element = xDoc.CreateElement("style");
@@ -546,7 +545,7 @@ namespace AndroidHelper.Logic
                             // ReSharper disable once PossibleNullReferenceException
                             xDoc.DocumentElement.AppendChild(element);
 
-                            using (var output = LFile.Create(error.File))
+                            using (var output = File.Create(error.File))
                                 xDoc.Save(output);
                         }
                         break;

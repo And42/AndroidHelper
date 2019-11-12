@@ -4,7 +4,6 @@ using System.Linq;
 using AndroidHelper.Logic;
 using AndroidHelper.Logic.Interfaces;
 using JetBrains.Annotations;
-using LongPaths.Logic;
 using Xunit.Abstractions;
 
 namespace AndroidHelperTests.Logic
@@ -26,7 +25,7 @@ namespace AndroidHelperTests.Logic
         {
             public string CreateTempFile()
             {
-                return CreateElement(index => $"temp_file_{index}", filePath => LFile.Create(filePath).Close());
+                return CreateElement(index => $"temp_file_{index}", filePath => File.Create(filePath).Close());
             }
         }
         

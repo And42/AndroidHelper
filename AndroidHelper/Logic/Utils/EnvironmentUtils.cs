@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Linq;
 using JetBrains.Annotations;
-using LongPaths.Logic;
 
 namespace AndroidHelper.Logic.Utils
 {
@@ -21,7 +20,7 @@ namespace AndroidHelper.Logic.Utils
 
             string[] folders = path.Split(';');
 
-            return folders.Select(folder => Path.Combine(folder, "java.exe")).FirstOrDefault(LFile.Exists);
+            return folders.Select(folder => Path.Combine(folder, "java.exe")).FirstOrDefault(File.Exists);
         }
     }
 }

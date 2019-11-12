@@ -51,9 +51,6 @@
     <Reference Include="AndroidTranslator">
       <HintPath>..\Libraries\AndroidTranslator.dll</HintPath>
     </Reference>
-    <Reference Include="LongPaths">
-      <HintPath>..\Libraries\LongPaths.dll</HintPath>
-    </Reference>
     <Reference Include="SmaliParser">
       <HintPath>..\Libraries\SmaliParser.dll</HintPath>
     </Reference>

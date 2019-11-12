@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Text;
-using LongPaths.Logic;
 
 namespace AndroidHelper.Logic
 {
@@ -37,7 +36,7 @@ namespace AndroidHelper.Logic
         /// <param name="encoding">Кодировка smali файла</param>
         public MainSmali(string path, string methodType, Encoding encoding = null)
         {
-            if (!LFile.Exists(path))
+            if (!File.Exists(path))
                 throw new FileNotFoundException($"File \"{path}\" was not found");
 
             _fileEncoding = encoding ?? DefaultEncoding;
@@ -59,7 +58,7 @@ namespace AndroidHelper.Logic
 
             //.method protected onCreate(...)V      .locals 1/.registers 1     .prologue     ...code...
 
-            _smaliText = LFile.ReadAllText(PathToSmali, _fileEncoding);
+            _smaliText = File.ReadAllText(PathToSmali, _fileEncoding);
             int onCreatePosition = FindPos(_smaliText, methodTypeLocal);
             // index -> .method protected ->onCreate(...)V      .locals 1/.registers 1     .prologue     ...code...
 
@@ -174,7 +173,7 @@ namespace AndroidHelper.Logic
         /// </summary>
         public void Save()
         {
-            LFile.WriteAllText(PathToSmali, _smaliText, _fileEncoding);
+            File.WriteAllText(PathToSmali, _smaliText, _fileEncoding);
         }
 
         /// <summary>
