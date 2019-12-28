@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using AndroidHelper.Logic;
 using AndroidHelper.Logic.Interfaces;
 using AndroidHelper.Logic.Utils;
@@ -77,6 +78,22 @@ namespace AndroidHelperTests.Logic
 
                 Assert.True(signedApkInfo.Exists);
                 Assert.NotEqual(0, signedApkInfo.Length);
+                
+                using (var sourceZip = ZipStorer.Open(apkCopy.TempFile, FileAccess.Read))
+                using (var signedZip = ZipStorer.Open(apkSigned.TempFile, FileAccess.Read))
+                {
+                    var sourceEntries =
+                        sourceZip.ReadCentralDir().ToDictionary(it => it.FilenameInZip, it => it.Method);
+                    foreach (var signedEntry in signedZip.ReadCentralDir())
+                    {
+                        if (signedEntry.FilenameInZip.StartsWith("META-INF/"))
+                            continue;
+                    
+                        ZipStorer.Compression sourceCompression;
+                        Assert.True(sourceEntries.TryGetValue(signedEntry.FilenameInZip, out sourceCompression));
+                        Assert.Equal(sourceCompression, signedEntry.Method);
+                    }
+                }
             }
         }
 
