@@ -3,16 +3,11 @@ using JetBrains.Annotations;
 
 namespace AndroidHelper.Logic.Utils
 {
-    internal static class ZipUtils
+    public static class ZipUtils
     {
-        public static IZipFile OpenZipFile([NotNull] string filePath)
+        public static IZipFile OpenZipFile([NotNull] string filePath, ZipFileMode mode)
         {
-            return new SystemIOZipFile.SystemIOZipFile(filePath);
-        }
-
-        public static IZipFile CreateZipFile([NotNull] string filePath)
-        {
-            return new SystemIOZipFile.SystemIOZipFile(filePath, ZipFileMode.Create);
+            return new SystemIOZipFile.SystemIOZipFile(filePath, mode);
         }
     }
 }

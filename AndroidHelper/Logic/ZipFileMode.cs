@@ -2,6 +2,8 @@ namespace AndroidHelper.Logic
 {
     public enum ZipFileMode
     {
-        Open, Create
+        Read,
+        Update,
+        Create
     }
 }

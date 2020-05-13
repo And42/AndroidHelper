@@ -26,10 +26,25 @@ namespace AndroidHelper.Logic.SystemIOZipFile
 
         public string PathOnDisk { get; }
 
-        public SystemIOZipFile([NotNull] string filePath, ZipFileMode mode = ZipFileMode.Open)
+        public SystemIOZipFile([NotNull] string filePath, ZipFileMode mode)
         {
             PathOnDisk = filePath;
-            _zipArchive = ZipFile.Open(filePath, mode == ZipFileMode.Open ? ZipArchiveMode.Update : ZipArchiveMode.Create);
+            ZipArchiveMode archiveMode;
+            switch (mode)
+            {
+                case ZipFileMode.Read:
+                    archiveMode = ZipArchiveMode.Read;
+                    break;
+                case ZipFileMode.Update:
+                    archiveMode = ZipArchiveMode.Update;
+                    break;
+                case ZipFileMode.Create:
+                    archiveMode = ZipArchiveMode.Create;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
+            }
+            _zipArchive = ZipFile.Open(filePath, archiveMode);
         }
 
         public void ExtractEntryByPath(string pathInArchive, string outputFile)

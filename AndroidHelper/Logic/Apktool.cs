@@ -352,7 +352,7 @@ namespace AndroidHelper.Logic
             if (BaksmaliPath == null)
                 throw new InvalidOperationException($"`{nameof(BaksmaliPath)}` has to be set");
 
-            using (var zip = ZipUtils.OpenZipFile(apkPath))
+            using (var zip = ZipUtils.OpenZipFile(apkPath, ZipFileMode.Read))
             {
                 using (var tempFolder = TempUtils.UseTempFolder(tempFolderProvider))
                 {
@@ -443,12 +443,12 @@ namespace AndroidHelper.Logic
 
                 // SharpZipLib
                 {
-                    using (var zip = ZipUtils.OpenZipFile(apkPath))
+                    using (var zip = ZipUtils.OpenZipFile(apkPath, ZipFileMode.Read))
                     {
                         zip.ExtractEntryByPath(manifestFileName, tempManifestFile);
                     }
 
-                    using (var zip = ZipUtils.CreateZipFile(tempManifestApk))
+                    using (var zip = ZipUtils.OpenZipFile(tempManifestApk, ZipFileMode.Create))
                     {
                         zip.AddToArchive(tempManifestFile, manifestFileName);
                         zip.Save();
@@ -570,7 +570,7 @@ namespace AndroidHelper.Logic
 
             // SharpZipLib
             {
-                using (var apkZip = ZipUtils.OpenZipFile(fileName))
+                using (var apkZip = ZipUtils.OpenZipFile(fileName, ZipFileMode.Update))
                 {
                     apkZip.DeleteDirectory("META-INF");
                     apkZip.Save();
