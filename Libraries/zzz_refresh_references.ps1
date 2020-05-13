@@ -1,4 +1,6 @@
-﻿function Combine($first, $second)
+﻿# Version 2
+
+function Combine($first, $second)
 {
 	Return [System.IO.Path]::Combine($first, $second)
 }
@@ -89,6 +91,9 @@ function CopyDependency ($dependencyLib)
 	$docFile = [System.IO.Path]::ChangeExtension($dependencyLib, ".xml")
 	$docFileName = [System.IO.Path]::GetFileName($docFile)
 	
+	$depsFile = [System.IO.Path]::ChangeExtension($dependencyLib, ".deps.json")
+	$depsFileName = [System.IO.Path]::GetFileName($depsFile)
+	
 	Write-Host ("  ...\" + $fileName + " ") -NoNewLine
 	$copied = CopyAndCheckFile $dependencyLib
 	
@@ -98,6 +103,9 @@ function CopyDependency ($dependencyLib)
 		
 		Write-Host ("  ...\" + $docFileName + " ") -NoNewLine
 		$tmp = CopyAndCheckFile $docFile $false
+
+		Write-Host ("  ...\" + $depsFileName + " ") -NoNewLine
+		$tmp = CopyAndCheckFile $depsFile $false
 	}
 }
 
@@ -108,6 +116,7 @@ function ProcessLibrary ($libraryPath, $includeDependencies)
 	
 	$pdbFile = [System.IO.Path]::ChangeExtension($libraryPath, ".pdb")
 	$docFile = [System.IO.Path]::ChangeExtension($libraryPath, ".xml")
+	$depsFile = [System.IO.Path]::ChangeExtension($libraryPath, ".deps.json")
 	
 	Write-Host ($libraryPath + " ") -NoNewLine
 	$copied = CopyAndCheckFile $libraryPath
@@ -118,6 +127,9 @@ function ProcessLibrary ($libraryPath, $includeDependencies)
 		
 		Write-Host ($docFile + " ") -NoNewLine
 		$tmp = CopyAndCheckFile $docFile $false
+
+		Write-Host ($depsFile + " ") -NoNewLine
+		$tmp = CopyAndCheckFile $depsFile $false
 	}
 	
 	if ($includeDependencies -eq $FALSE)

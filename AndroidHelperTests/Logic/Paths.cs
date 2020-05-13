@@ -13,7 +13,7 @@ namespace AndroidHelperTests.Logic
                     Path.GetDirectoryName(
                         Assembly.GetExecutingAssembly().CodeBase.Substring("file:///".Length)
                     ) ?? string.Empty,
-                    "..", "..", "Resources"
+                    "..", "..", "..", "Resources"
                 )
             );
 

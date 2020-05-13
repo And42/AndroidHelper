@@ -2,10 +2,12 @@
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Text;
 using AndroidHelper.Logic;
 using AndroidHelper.Logic.Interfaces;
 using AndroidHelper.Logic.Utils;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace AndroidHelperTests.Logic
 {
@@ -16,6 +18,13 @@ namespace AndroidHelperTests.Logic
 
         private static readonly string StartFolder = Path.Combine(Paths.Start, nameof(ApktoolTests));
 
+        private readonly ITestOutputHelper _output;
+
+        public ApktoolTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         [Fact]
         public void Baksmali()
         {
@@ -25,19 +34,24 @@ namespace AndroidHelperTests.Logic
         [Fact]
         public void Sign()
         {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             CheckAllInDir(Path.Combine(StartFolder, nameof(Sign)), CheckApkSigning);
         }
 
         [Fact]
         public void RemoveMetaInf()
         {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             CheckAllInDir(Path.Combine(StartFolder, nameof(RemoveMetaInf)), CheckApkRemoveMetaInf);
         }
 
-        private static void CheckAllInDir(string directory, Action<string> checker)
+        private void CheckAllInDir(string directory, Action<string> checker)
         {
             foreach (string file in Directory.EnumerateFiles(directory))
+            {
+                _output.WriteLine($"Checking file: `{file}`\n");
                 checker(file);
+            }
         }
 
         private static void CheckApkBaksmali(string fileToProcess)

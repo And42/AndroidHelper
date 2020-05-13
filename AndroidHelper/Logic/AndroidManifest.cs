@@ -20,7 +20,7 @@ namespace AndroidHelper.Logic
         /// <summary>
         /// Возвращает путь к текущему AndroidManifest.xml
         /// </summary>
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string PathToManifest { get; }
 
         /// <summary>
@@ -39,19 +39,19 @@ namespace AndroidHelper.Logic
         /// <summary>
         /// Возвращает XmlDocument представляющий текущий AndroidManifest.xml
         /// </summary>
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public XmlDocument Document { get; }
 
         /// <summary>
         /// Возвращает текущие разрешения приложения
         /// </summary>
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public UsesPermissions Permissions { get; }
 
         /// <summary>
         /// Возвращает список activity документа
         /// </summary>
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public IReadOnlyList<XmlNode> Activities { get; }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace AndroidHelper.Logic
         /// <summary>
         /// Возвращает или задаёт название файла изображения
         /// </summary>
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string IconPath
         {
             get => _iconAttribute.Value;
@@ -110,14 +110,14 @@ namespace AndroidHelper.Logic
 
         private static readonly string ApplicationXPath = $"/*[local-name() = '{ManifestTag}']/*[local-name() = '{ApplicationTag}']";
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private static readonly string[] Methods = {"onCreate", "createView"};
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private static readonly Encoding DefaultSmaliEncoding = new UTF8Encoding(false);
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly XmlAttribute _packageAttribute;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly XmlAttribute _iconAttribute;
 
         private readonly string _appLinkAttrib;
@@ -130,7 +130,7 @@ namespace AndroidHelper.Logic
         /// <param name="mainSmaliEncoding">Кодировка главного smali файла (по умолчанию UTF-8)</param>
         /// <param name="needActivitySmali">Обязательно ли класс должен наследоваться от Activity</param>
         public AndroidManifest(
-            [NotNull] string path,
+            [JetBrains.Annotations.NotNull] string path,
             [CanBeNull] Encoding mainSmaliEncoding = null,
             bool needActivitySmali = false
         )
@@ -211,7 +211,7 @@ namespace AndroidHelper.Logic
             TraceWriter.WriteLine($"AndroidManifest: {nameof(Package)} = \"{Package}\"");
         }
 
-        private static (bool isMain, bool? isFromLauncher) IsMainActivity([NotNull] XmlNode activityNode)
+        private static (bool isMain, bool? isFromLauncher) IsMainActivity([JetBrains.Annotations.NotNull] XmlNode activityNode)
         {
             if (activityNode == null)
                 throw new ArgumentNullException(nameof(activityNode));
@@ -264,10 +264,10 @@ namespace AndroidHelper.Logic
         }
 
         private static (string mainSmaliName, string mainSmaliPath, string method) GetMainSmaliInfo(
-            [NotNull] XmlNode applicationNode,
+            [JetBrains.Annotations.NotNull] XmlNode applicationNode,
             [CanBeNull] XmlNode mainActivityNode,
-            [NotNull] IReadOnlyList<string> smaliFolders,
-            [NotNull] IReadOnlyList<string> methods,
+            [JetBrains.Annotations.NotNull] IReadOnlyList<string> smaliFolders,
+            [JetBrains.Annotations.NotNull] IReadOnlyList<string> methods,
             bool needActivity
         )
         {
