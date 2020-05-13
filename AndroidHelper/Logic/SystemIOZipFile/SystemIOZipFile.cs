@@ -65,7 +65,7 @@ namespace AndroidHelper.Logic.SystemIOZipFile
         {
             CheckIfDisposed();
 
-            var filePaths = entries.Select(it => it.PathInArchive).ToHashSet();
+            var filePaths = new HashSet<string>(entries.Select(it => it.PathInArchive));
             foreach (var zipEntry in _zipArchive.Entries)
                 if (filePaths.Contains(zipEntry.FullName))
                     zipEntry.Delete();
