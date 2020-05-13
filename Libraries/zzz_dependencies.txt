@@ -1,2 +1,0 @@
-﻿C:\Files\Programming\C#\library_repos\SmaliParser\bin\Release\SmaliParser.dll
-only_dll

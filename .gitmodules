@@ -1,0 +1,3 @@
+[submodule "submodules/SmaliParser"]
+	path = submodules/SmaliParser
+	url = git@github.com:And42/SmaliParser.git
