@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>2.2.2.0</Version>
+    <Version>2.2.2.1</Version>
     <NeutralLanguage>ru</NeutralLanguage>
     <Description>Library for modifying apk files</Description>
     <Copyright>Andrey Skobtsov</Copyright>
@@ -12,8 +12,8 @@
     <PackageProjectUrl>https://github.com/And42/AndroidHelper</PackageProjectUrl>
     <RepositoryUrl>https://github.com/And42/AndroidHelper</RepositoryUrl>
     <Company>Andrey Skobtsov</Company>
-    <AssemblyVersion>2.2.2.0</AssemblyVersion>
-    <FileVersion>2.2.2.0</FileVersion>
+    <AssemblyVersion>2.2.2.1</AssemblyVersion>
+    <FileVersion>2.2.2.1</FileVersion>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
   </PropertyGroup>
 
