@@ -4,10 +4,17 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Version>2.2.2.0</Version>
     <NeutralLanguage>ru</NeutralLanguage>
-    <Description>Библиотека для работы с андроид файлами</Description>
-    <Copyright>Андрей Скобцов</Copyright>
-    <Authors>Андрей Скобцов</Authors>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Description>Library for modifying apk files</Description>
+    <Copyright>Andrey Skobtsov</Copyright>
+    <Authors>Andrey Skobtsov</Authors>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Title>AndroidHelper</Title>
+    <PackageProjectUrl>https://github.com/And42/AndroidHelper</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/And42/AndroidHelper</RepositoryUrl>
+    <Company>Andrey Skobtsov</Company>
+    <AssemblyVersion>2.2.2.0</AssemblyVersion>
+    <FileVersion>2.2.2.0</FileVersion>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -17,6 +24,8 @@
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2022.3.1" />
     <PackageReference Include="SmaliParser" Version="1.4.1.1" />
+
+    <None Include="../LICENSE.txt" Pack="true" PackagePath="" />
   </ItemGroup>
 
 </Project>
